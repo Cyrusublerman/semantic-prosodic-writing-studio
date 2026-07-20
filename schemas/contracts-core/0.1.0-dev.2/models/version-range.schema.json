@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "SemVer": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:version-range:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "include_maximum": {
+      "default": false,
+      "title": "Include Maximum",
+      "type": "boolean"
+    },
+    "include_minimum": {
+      "default": true,
+      "title": "Include Minimum",
+      "type": "boolean"
+    },
+    "maximum": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SemVer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "minimum": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SemVer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "required_major": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Required Major"
+    }
+  },
+  "title": "VersionRange",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

@@ -1,0 +1,30 @@
+{
+  "$id": "urn:pkl:spws:schema:contracts-core:time-window:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "title": "TimeWindow",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

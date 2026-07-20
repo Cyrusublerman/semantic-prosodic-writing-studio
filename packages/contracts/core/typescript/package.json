@@ -1,0 +1,21 @@
+{
+  "name": "spws-contracts-core-phase5-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate-types": "node generate-types.mjs",
+    "validate-ajv": "node validate-ajv.mjs",
+    "validate-hyperjump": "node validate-hyperjump.mjs",
+    "canonical-parity": "node canonical-parity.mjs",
+    "typecheck": "node typecheck.mjs",
+    "validate": "npm run generate-types && npm run validate-ajv && npm run validate-hyperjump && npm run canonical-parity && npm run typecheck"
+  },
+  "dependencies": {
+    "@hyperjump/json-schema": "1.17.7",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "canonicalize": "3.0.0",
+    "json-schema-to-typescript": "15.0.4",
+    "typescript": "6.0.3"
+  }
+}

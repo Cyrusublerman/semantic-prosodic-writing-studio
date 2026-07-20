@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "RevisionDecisionKind": {
+      "enum": [
+        "accept",
+        "reject",
+        "combine",
+        "defer",
+        "manual_replace"
+      ],
+      "title": "RevisionDecisionKind",
+      "type": "string"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Candidate Ids",
+      "type": "array"
+    },
+    "decided_at": {
+      "$ref": "#/$defs/UtcDateTime"
+    },
+    "decided_by": {
+      "default": "human",
+      "title": "Decided By",
+      "type": "string"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/RevisionDecisionKind"
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rationale"
+    },
+    "resulting_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resulting Text"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "run_id",
+    "kind",
+    "decided_at"
+  ],
+  "title": "RevisionDecision",
+  "type": "object"
+}

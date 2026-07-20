@@ -1,0 +1,25 @@
+{
+  "agent": {
+    "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+    "agent_type": "person",
+    "display_name": "Alexander Einoder",
+    "external_identifiers": []
+  },
+  "contribution_id": "019f6fca-9df7-75c0-a30a-2034265fa4a4",
+  "review_state": "unreviewed",
+  "role": "spws.contribution.human_combined",
+  "sources": [
+    {
+      "object_id": "019f6fca-9df7-75c0-a30a-204571fa04c8",
+      "version_id": "019f6fca-9df7-75c0-a30a-2058a9c84404"
+    },
+    {
+      "object_id": "019f6fca-9df7-75c0-a30a-206da18cc9e0",
+      "version_id": "019f6fca-9df7-75c0-a30a-2075baba426e"
+    }
+  ],
+  "target": {
+    "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+    "version_id": "019f6fca-9df7-75c0-a30a-1fab2a5c45b2"
+  }
+}

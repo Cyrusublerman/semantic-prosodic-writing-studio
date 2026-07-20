@@ -1,0 +1,23 @@
+{
+  "mapping_id": "019f6fca-9df7-75c0-a30a-1ff9a69c4995",
+  "segments": [
+    {
+      "derived_end": 5,
+      "derived_start": 0,
+      "kind": "equal",
+      "raw_end": 5,
+      "raw_start": 0
+    },
+    {
+      "derived_end": 6,
+      "derived_start": 5,
+      "kind": "replace",
+      "raw_end": 7,
+      "raw_start": 5
+    }
+  ],
+  "source_length": 7,
+  "source_representation_id": "019f6fca-9df7-75c0-a30a-1febe9e6781b",
+  "target_length": 6,
+  "target_representation_id": "019f6fca-9df7-75c0-a30a-2002538f7e08"
+}

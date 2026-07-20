@@ -1,0 +1,161 @@
+{
+  "warning_codes": [
+    {
+      "code": "COC-W-001",
+      "name": "unknown_rights",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-002",
+      "name": "restricted_pending_review",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-003",
+      "name": "unknown_creator",
+      "severity": "info"
+    },
+    {
+      "code": "COC-W-004",
+      "name": "provenance_incomplete",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-005",
+      "name": "confidence_uncalibrated",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-006",
+      "name": "span_relocated",
+      "severity": "info"
+    },
+    {
+      "code": "COC-W-007",
+      "name": "span_relocation_ambiguous",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-008",
+      "name": "normalisation_changed_text",
+      "severity": "info"
+    },
+    {
+      "code": "COC-W-009",
+      "name": "runtime_unicode_version_mismatch",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-010",
+      "name": "schema_minor_newer_than_consumer",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-011",
+      "name": "optional_extension_ignored",
+      "severity": "info"
+    },
+    {
+      "code": "COC-W-012",
+      "name": "non_reproducible_component",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-013",
+      "name": "external_retention_unknown",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-014",
+      "name": "quotation_overlap_risk",
+      "severity": "warning"
+    },
+    {
+      "code": "COC-W-015",
+      "name": "partial_result",
+      "severity": "warning"
+    }
+  ],
+  "failure_codes": [
+    {
+      "code": "COC-F-001",
+      "name": "invalid_identifier"
+    },
+    {
+      "code": "COC-F-002",
+      "name": "unsupported_schema_major"
+    },
+    {
+      "code": "COC-F-003",
+      "name": "unknown_critical_extension"
+    },
+    {
+      "code": "COC-F-004",
+      "name": "digest_mismatch"
+    },
+    {
+      "code": "COC-F-005",
+      "name": "parent_cycle"
+    },
+    {
+      "code": "COC-F-006",
+      "name": "provenance_cycle"
+    },
+    {
+      "code": "COC-F-007",
+      "name": "missing_required_provenance"
+    },
+    {
+      "code": "COC-F-008",
+      "name": "policy_denied"
+    },
+    {
+      "code": "COC-F-009",
+      "name": "policy_indeterminate"
+    },
+    {
+      "code": "COC-F-010",
+      "name": "invalid_span"
+    },
+    {
+      "code": "COC-F-011",
+      "name": "span_surrogate_split"
+    },
+    {
+      "code": "COC-F-012",
+      "name": "representation_mismatch"
+    },
+    {
+      "code": "COC-F-013",
+      "name": "canonicalisation_failed"
+    },
+    {
+      "code": "COC-F-014",
+      "name": "unsafe_json_integer"
+    },
+    {
+      "code": "COC-F-015",
+      "name": "non_finite_number"
+    },
+    {
+      "code": "COC-F-016",
+      "name": "invalid_timestamp"
+    },
+    {
+      "code": "COC-F-017",
+      "name": "retention_hold_conflict"
+    },
+    {
+      "code": "COC-F-018",
+      "name": "external_transmission_blocked"
+    },
+    {
+      "code": "COC-F-019",
+      "name": "required_human_decision_missing"
+    },
+    {
+      "code": "COC-F-020",
+      "name": "corrupt_or_missing_payload"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "source_id": "raw-fixture-001",
+  "schema_version": "0.1.0",
+  "input_package_id": "inp-fixture-001",
+  "media_type": "text/plain",
+  "encoding": "utf-8",
+  "text": "The winter light falls soft on stone.",
+  "content_digest": {
+    "algorithm": "sha-256",
+    "value": "3a5cfa88cf4a6f06c486f9d4c9ef77ce7116d83858fcfdb6087ac8655d23d60f",
+    "basis": "utf8_text",
+    "byte_length": 37,
+    "media_type": "text/plain",
+    "character_encoding": "utf-8",
+    "canonicalisation": {
+      "method": "none",
+      "version": null
+    },
+    "verification_state": "verified"
+  },
+  "stored_at": "2026-07-19T07:04:38.634861Z",
+  "storage_location": "fixture://raw-fixture-001",
+  "rights": "public",
+  "privacy": "public",
+  "provenance": null,
+  "immutable": true
+}

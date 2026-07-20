@@ -1,0 +1,260 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "ActivityId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "AgentId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "AgentReference": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "$ref": "#/$defs/AgentId"
+        },
+        "agent_type": {
+          "$ref": "#/$defs/AgentType"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "agent_id",
+        "agent_type"
+      ],
+      "title": "AgentReference",
+      "type": "object"
+    },
+    "AgentType": {
+      "enum": [
+        "person",
+        "organisation",
+        "software_component",
+        "model",
+        "service",
+        "system"
+      ],
+      "title": "AgentType",
+      "type": "string"
+    },
+    "ContributionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "ReviewState": {
+      "enum": [
+        "unreviewed",
+        "machine_checked",
+        "human_reviewed",
+        "approved",
+        "rejected",
+        "disputed",
+        "superseded"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:contribution-record:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activity_id": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ActivityId"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "agent": {
+      "$ref": "#/$defs/AgentReference"
+    },
+    "contribution_id": {
+      "$ref": "#/$defs/ContributionId"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "review_state": {
+      "$ref": "#/$defs/ReviewState",
+      "default": "unreviewed"
+    },
+    "role": {
+      "title": "Role",
+      "type": "string"
+    },
+    "sources": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/VersionReference"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "target": {
+      "$ref": "#/$defs/VersionReference"
+    }
+  },
+  "required": [
+    "contribution_id",
+    "role",
+    "agent",
+    "target"
+  ],
+  "title": "ContributionRecord",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

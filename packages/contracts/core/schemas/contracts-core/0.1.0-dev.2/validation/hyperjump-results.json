@@ -1,0 +1,113 @@
+{
+  "validator": "hyperjump",
+  "version": "1.17.7",
+  "ok": true,
+  "fixtures": [
+    {
+      "id": "minimal-envelope",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "complete-envelope",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-present",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-ambiguous",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-unavailable",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-withheld",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-failed",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-identity",
+      "valid": false,
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-digest",
+      "valid": false,
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-parent-self-cycle",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-policy-local-only-permit",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-provenance-self-relation",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "unicode-emoji-span",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "unicode-combining-span",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "crlf-span-mapping",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "repeated-quote-span",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "unknown-rights-assertion",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "external-transmission-denial",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "mixed-source-contribution",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "content-free-tombstone",
+      "valid": true,
+      "matched_expectation": true
+    },
+    {
+      "id": "critical-extension",
+      "valid": true,
+      "matched_expectation": true
+    }
+  ],
+  "failures": []
+}

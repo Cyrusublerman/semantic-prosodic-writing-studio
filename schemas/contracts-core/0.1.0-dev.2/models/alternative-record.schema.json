@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "ConfidenceKind": {
+      "enum": [
+        "probability",
+        "calibrated_probability",
+        "agreement",
+        "coverage",
+        "heuristic_strength",
+        "ordinal"
+      ],
+      "title": "ConfidenceKind",
+      "type": "string"
+    },
+    "ConfidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_set": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "$ref": "#/$defs/ConfidenceKind"
+        },
+        "method": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Method",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sample_size": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sample Size"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "kind",
+        "value",
+        "method"
+      ],
+      "title": "ConfidenceRecord",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:alternative-record:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ConfidenceRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rationale"
+    },
+    "value": {
+      "title": "Value"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "title": "AlternativeRecord",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

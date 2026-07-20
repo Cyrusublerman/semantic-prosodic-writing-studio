@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "canonical_utf8_hex": "7b2261223a312c2262223a327d",
+      "id": "ordered-object",
+      "input": {
+        "a": 1,
+        "b": 2
+      },
+      "sha256": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777"
+    },
+    {
+      "canonical_utf8_hex": "7b2274657874223a2241f09f988065cc81227d",
+      "id": "unicode",
+      "input": {
+        "text": "A😀é"
+      },
+      "sha256": "97e8de789105dcfeb0b9149eca1bcfcffd371314c47c1a56e8756afb1731a568"
+    },
+    {
+      "canonical_utf8_hex": "7b2278223a5b332c322c315d7d",
+      "id": "array",
+      "input": {
+        "x": [
+          3,
+          2,
+          1
+        ]
+      },
+      "sha256": "2ece5696ca92934ef9321f907b1cfff8cdef0b74aee4b5f1ca640e8262784506"
+    },
+    {
+      "canonical_utf8_hex": "7b227a223a7b2261223a6e756c6c2c2262223a66616c73657d7d",
+      "id": "nested",
+      "input": {
+        "z": {
+          "a": null,
+          "b": false
+        }
+      },
+      "sha256": "22219c2b6b95ffba060701b19aa7d924a0ea983e5729a2a099aeecc123f4559a"
+    }
+  ]
+}

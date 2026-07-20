@@ -1,0 +1,88 @@
+{
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": [],
+  "failures": [],
+  "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+  "object_type": "spws.object.raw_source",
+  "parent_version_ids": [],
+  "payload": {
+    "digest": {
+      "algorithm": "sha-256",
+      "basis": "utf8_text",
+      "byte_length": 8,
+      "canonicalisation": {
+        "method": "none"
+      },
+      "character_encoding": "utf-8",
+      "media_type": "text/plain",
+      "value": "eebbf6457e46a7f63acdf9b97390f790ba443d60cfa44b607da7e5c40aa1cc1d",
+      "verification_state": "verified"
+    },
+    "media_type": "text/plain",
+    "payload_kind": "embedded",
+    "value": "complete"
+  },
+  "policy": {
+    "decisions": [],
+    "policy_bundle_refs": [],
+    "privacy": {
+      "allowed_recipients": [],
+      "consent_required": false,
+      "privacy_class": "private",
+      "transmission_class": "local_only"
+    },
+    "retention": {
+      "deletion_mode": "tombstone_only",
+      "legal_hold": false,
+      "retention_class": "project_lifetime"
+    }
+  },
+  "provenance": {
+    "contribution_records": [],
+    "creation_activity": {
+      "activity_id": "019f6fca-9df7-75c0-a30a-1f831fd36991",
+      "activity_type": "spws.activity.ingest",
+      "ended_at": "2026-07-17T00:00:01Z",
+      "responsible_agents": [
+        {
+          "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+          "agent_type": "person",
+          "display_name": "Alexander Einoder",
+          "external_identifiers": []
+        }
+      ],
+      "started_at": "2026-07-17T00:00:00Z",
+      "status": "succeeded"
+    },
+    "creator": {
+      "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+      "agent_type": "person",
+      "display_name": "Alexander Einoder",
+      "external_identifiers": []
+    },
+    "direct_relations": [],
+    "full_provenance_records": []
+  },
+  "record_digest": {
+    "algorithm": "sha-256",
+    "basis": "record_projection",
+    "byte_length": 2248,
+    "canonicalisation": {
+      "method": "domain_projection",
+      "version": "urn:pkl:spws:digest-projection:core-record:1"
+    },
+    "character_encoding": "utf-8",
+    "media_type": "application/json",
+    "value": "0fe8cd91c6f0d150ed5ca3e94bc89cce73e8fc873b8dbe5137f37053008f8ff8",
+    "verification_state": "verified"
+  },
+  "review_state": "unreviewed",
+  "reviews": [],
+  "schema": {
+    "schema_id": "urn:pkl:spws:schema:contracts-core:core-object-envelope:0.1.0-dev.2",
+    "schema_version": "0.1.0-dev.2"
+  },
+  "state": "active",
+  "version_id": "019f6fca-9df7-75c0-a30a-1fab2a5c45b2",
+  "warnings": []
+}

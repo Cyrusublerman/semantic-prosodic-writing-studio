@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "PrivacyClass": {
+      "enum": [
+        "public",
+        "internal",
+        "private",
+        "sensitive",
+        "highly_sensitive"
+      ],
+      "title": "PrivacyClass",
+      "type": "string"
+    },
+    "TransmissionClass": {
+      "enum": [
+        "public_allowed",
+        "private_share_allowed",
+        "external_with_consent",
+        "local_only",
+        "blocked"
+      ],
+      "title": "TransmissionClass",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:privacy-policy:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_recipients": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Recipients",
+      "type": "array"
+    },
+    "consent_required": {
+      "default": false,
+      "title": "Consent Required",
+      "type": "boolean"
+    },
+    "notes": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Notes"
+    },
+    "privacy_class": {
+      "$ref": "#/$defs/PrivacyClass"
+    },
+    "transmission_class": {
+      "$ref": "#/$defs/TransmissionClass"
+    }
+  },
+  "required": [
+    "privacy_class",
+    "transmission_class"
+  ],
+  "title": "PrivacyPolicy",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

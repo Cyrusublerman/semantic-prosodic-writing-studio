@@ -1,0 +1,98 @@
+{
+  "rights": {
+    "assertion_types": [
+      "spws.rights.ownership",
+      "spws.rights.licence",
+      "spws.rights.permission",
+      "spws.rights.consent",
+      "spws.rights.contract",
+      "spws.rights.public_domain",
+      "spws.rights.statutory_basis",
+      "spws.rights.restriction",
+      "spws.rights.withdrawal",
+      "spws.rights.dispute",
+      "spws.rights.unknown"
+    ],
+    "effects": [
+      "permit",
+      "prohibit"
+    ],
+    "operations": [
+      "spws.operation.ingest",
+      "spws.operation.store",
+      "spws.operation.index",
+      "spws.operation.local_analysis",
+      "spws.operation.local_retrieval",
+      "spws.operation.local_transformation",
+      "spws.operation.external_context",
+      "spws.operation.external_transmission",
+      "spws.operation.model_training",
+      "spws.operation.generate_derivative",
+      "spws.operation.quote",
+      "spws.operation.paraphrase",
+      "spws.operation.export",
+      "spws.operation.private_share",
+      "spws.operation.public_share",
+      "spws.operation.publish",
+      "spws.operation.redistribute",
+      "spws.operation.retain",
+      "spws.operation.delete"
+    ],
+    "duties": [
+      "spws.duty.attribute",
+      "spws.duty.include_licence",
+      "spws.duty.preserve_notice",
+      "spws.duty.share_alike",
+      "spws.duty.restrict_audience",
+      "spws.duty.obtain_approval",
+      "spws.duty.notify",
+      "spws.duty.compensate",
+      "spws.duty.delete_after_use",
+      "spws.duty.provide_source"
+    ],
+    "constraint_types": [
+      "spws.constraint.purpose",
+      "spws.constraint.recipient",
+      "spws.constraint.jurisdiction",
+      "spws.constraint.time_window",
+      "spws.constraint.storage_location",
+      "spws.constraint.model_provider",
+      "spws.constraint.security_classification",
+      "spws.constraint.audience",
+      "spws.constraint.media",
+      "spws.constraint.excerpt_length",
+      "spws.constraint.use_count",
+      "spws.constraint.attribution_form"
+    ],
+    "privacy_classes": [
+      "public",
+      "internal",
+      "private",
+      "sensitive",
+      "highly_sensitive"
+    ],
+    "transmission_classes": [
+      "public_allowed",
+      "private_share_allowed",
+      "external_with_consent",
+      "local_only",
+      "blocked"
+    ],
+    "retention_classes": [
+      "ephemeral",
+      "session",
+      "project_lifetime",
+      "until_date",
+      "indefinite",
+      "legal_hold",
+      "delete_on_request"
+    ],
+    "deletion_modes": [
+      "hard_delete_payload",
+      "tombstone_only",
+      "cryptographic_erasure",
+      "external_reference_removal",
+      "blocked_by_hold"
+    ]
+  }
+}

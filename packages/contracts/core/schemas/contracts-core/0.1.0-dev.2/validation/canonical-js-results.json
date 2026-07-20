@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "id": "ordered-object",
+      "matched": true
+    },
+    {
+      "id": "unicode",
+      "matched": true
+    },
+    {
+      "id": "array",
+      "matched": true
+    },
+    {
+      "id": "nested",
+      "matched": true
+    }
+  ],
+  "failures": []
+}

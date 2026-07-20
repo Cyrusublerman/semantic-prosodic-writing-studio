@@ -1,0 +1,41 @@
+{
+  "$defs": {
+    "ConstraintOperator": {
+      "enum": [
+        "equals",
+        "not_equals",
+        "in",
+        "not_in",
+        "lte",
+        "gte",
+        "contains"
+      ],
+      "title": "ConstraintOperator",
+      "type": "string"
+    },
+    "JsonValue": {}
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:policy-constraint:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "constraint_type": {
+      "title": "Constraint Type",
+      "type": "string"
+    },
+    "operator": {
+      "$ref": "#/$defs/ConstraintOperator",
+      "default": "equals"
+    },
+    "value": {
+      "$ref": "#/$defs/JsonValue"
+    }
+  },
+  "required": [
+    "constraint_type",
+    "value"
+  ],
+  "title": "PolicyConstraint",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

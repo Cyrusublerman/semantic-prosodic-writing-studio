@@ -1,0 +1,56 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:external-identifier:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "namespace": {
+      "$ref": "#/$defs/RegisteredIdentifier"
+    },
+    "resolution_state": {
+      "$ref": "#/$defs/ResolutionState",
+      "default": "unresolved"
+    },
+    "uri": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AbsoluteUri"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "value": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Value",
+      "type": "string"
+    }
+  },
+  "required": [
+    "namespace",
+    "value"
+  ],
+  "title": "ExternalIdentifier",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

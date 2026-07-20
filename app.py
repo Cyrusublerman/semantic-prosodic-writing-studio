@@ -36,7 +36,7 @@ app.add_middleware(
 
 # Import generation engine
 try:
-    from src.generation import PoemGenerator, GenerationSpec
+    from wordrare.generation import PoemGenerator, GenerationSpec
     generator = PoemGenerator()
     logger.info("PoemGenerator initialized successfully")
 except Exception as e:

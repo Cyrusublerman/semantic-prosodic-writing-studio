@@ -1,0 +1,42 @@
+{
+  "$id": "urn:pkl:spws:schema:contracts-core:text-quote-selector:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "exact": {
+      "minLength": 1,
+      "title": "Exact",
+      "type": "string"
+    },
+    "prefix": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Prefix"
+    },
+    "suffix": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Suffix"
+    }
+  },
+  "required": [
+    "exact"
+  ],
+  "title": "TextQuoteSelector",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

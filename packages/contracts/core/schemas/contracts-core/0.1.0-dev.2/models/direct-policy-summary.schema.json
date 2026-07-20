@@ -1,0 +1,420 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "AuthorityTier": {
+      "enum": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ],
+      "title": "AuthorityTier",
+      "type": "integer"
+    },
+    "DecisionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "DeletionMode": {
+      "enum": [
+        "hard_delete_payload",
+        "tombstone_only",
+        "cryptographic_erasure",
+        "external_reference_removal",
+        "blocked_by_hold"
+      ],
+      "title": "DeletionMode",
+      "type": "string"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ObjectReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "object_id"
+      ],
+      "title": "ObjectReference",
+      "type": "object"
+    },
+    "PolicyDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "title": "Allowed",
+          "type": "boolean"
+        },
+        "applied_rule_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RuleId"
+          },
+          "title": "Applied Rule Ids",
+          "type": "array"
+        },
+        "decision_id": {
+          "$ref": "#/$defs/DecisionId"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/UtcDateTime"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "highest_authority_tier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AuthorityTier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "operation": {
+          "title": "Operation",
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/$defs/PolicyDecisionOutcome"
+        },
+        "rejected_rule_ids": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RuleId"
+          },
+          "title": "Rejected Rule Ids",
+          "type": "array"
+        },
+        "unsatisfied_duties": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Unsatisfied Duties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "decision_id",
+        "operation",
+        "outcome",
+        "allowed",
+        "explanation",
+        "evaluated_at"
+      ],
+      "title": "PolicyDecision",
+      "type": "object"
+    },
+    "PolicyDecisionOutcome": {
+      "enum": [
+        "permit",
+        "deny",
+        "deny_pending_duty",
+        "indeterminate"
+      ],
+      "title": "PolicyDecisionOutcome",
+      "type": "string"
+    },
+    "PrivacyClass": {
+      "enum": [
+        "public",
+        "internal",
+        "private",
+        "sensitive",
+        "highly_sensitive"
+      ],
+      "title": "PrivacyClass",
+      "type": "string"
+    },
+    "PrivacyPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_recipients": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Recipients",
+          "type": "array"
+        },
+        "consent_required": {
+          "default": false,
+          "title": "Consent Required",
+          "type": "boolean"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "privacy_class": {
+          "$ref": "#/$defs/PrivacyClass"
+        },
+        "transmission_class": {
+          "$ref": "#/$defs/TransmissionClass"
+        }
+      },
+      "required": [
+        "privacy_class",
+        "transmission_class"
+      ],
+      "title": "PrivacyPolicy",
+      "type": "object"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "RetentionClass": {
+      "enum": [
+        "ephemeral",
+        "session",
+        "project_lifetime",
+        "until_date",
+        "indefinite",
+        "legal_hold",
+        "delete_on_request"
+      ],
+      "title": "RetentionClass",
+      "type": "string"
+    },
+    "RetentionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "delete_after": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UtcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "deletion_mode": {
+          "$ref": "#/$defs/DeletionMode"
+        },
+        "hold_reference": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "legal_hold": {
+          "default": false,
+          "title": "Legal Hold",
+          "type": "boolean"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "retention_class": {
+          "$ref": "#/$defs/RetentionClass"
+        }
+      },
+      "required": [
+        "retention_class",
+        "deletion_mode"
+      ],
+      "title": "RetentionPolicy",
+      "type": "object"
+    },
+    "RuleId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "TransmissionClass": {
+      "enum": [
+        "public_allowed",
+        "private_share_allowed",
+        "external_with_consent",
+        "local_only",
+        "blocked"
+      ],
+      "title": "TransmissionClass",
+      "type": "string"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:direct-policy-summary:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decisions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PolicyDecision"
+      },
+      "title": "Decisions",
+      "type": "array"
+    },
+    "policy_bundle_refs": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ObjectReference"
+      },
+      "title": "Policy Bundle Refs",
+      "type": "array"
+    },
+    "privacy": {
+      "$ref": "#/$defs/PrivacyPolicy"
+    },
+    "retention": {
+      "$ref": "#/$defs/RetentionPolicy"
+    }
+  },
+  "required": [
+    "privacy",
+    "retention"
+  ],
+  "title": "DirectPolicySummary",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

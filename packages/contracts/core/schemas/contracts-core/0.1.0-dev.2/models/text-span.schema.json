@@ -1,0 +1,167 @@
+{
+  "$defs": {
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "RepresentationId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "TextQuoteSelector": {
+      "additionalProperties": false,
+      "properties": {
+        "exact": {
+          "minLength": 1,
+          "title": "Exact",
+          "type": "string"
+        },
+        "prefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prefix"
+        },
+        "suffix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suffix"
+        }
+      },
+      "required": [
+        "exact"
+      ],
+      "title": "TextQuoteSelector",
+      "type": "object"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:text-span:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "coordinate_profile": {
+      "default": "unicode-code-point-zero-based-half-open-v1",
+      "title": "Coordinate Profile",
+      "type": "string"
+    },
+    "end": {
+      "minimum": 0,
+      "title": "End",
+      "type": "integer"
+    },
+    "quote": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextQuoteSelector"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "representation_id": {
+      "$ref": "#/$defs/RepresentationId"
+    },
+    "representation_version": {
+      "$ref": "#/$defs/VersionReference"
+    },
+    "runtime_unicode_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runtime Unicode Version"
+    },
+    "span_id": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Span Id",
+      "type": "string"
+    },
+    "start": {
+      "minimum": 0,
+      "title": "Start",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "span_id",
+    "representation_id",
+    "representation_version",
+    "start",
+    "end"
+  ],
+  "title": "TextSpan",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

@@ -1,0 +1,580 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "AlternativeRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConfidenceRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "AlternativeRecord",
+      "type": "object"
+    },
+    "ConfidenceKind": {
+      "enum": [
+        "probability",
+        "calibrated_probability",
+        "agreement",
+        "coverage",
+        "heuristic_strength",
+        "ordinal"
+      ],
+      "title": "ConfidenceKind",
+      "type": "string"
+    },
+    "ConfidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_set": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "$ref": "#/$defs/ConfidenceKind"
+        },
+        "method": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Method",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sample_size": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sample Size"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "kind",
+        "value",
+        "method"
+      ],
+      "title": "ConfidenceRecord",
+      "type": "object"
+    },
+    "EvidenceMethod": {
+      "enum": [
+        "measured",
+        "parsed",
+        "retrieved",
+        "computed",
+        "derived",
+        "rule_inferred",
+        "statistical_inferred",
+        "model_inferred",
+        "human_asserted",
+        "human_reviewed",
+        "imported",
+        "defaulted"
+      ],
+      "title": "EvidenceMethod",
+      "type": "string"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "FailureId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "FailureRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "failure_id": {
+          "$ref": "#/$defs/FailureId"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "related_objects": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObjectReference"
+          },
+          "title": "Related Objects",
+          "type": "array"
+        },
+        "remediation": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remediation"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "scope": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity",
+          "default": "error"
+        }
+      },
+      "required": [
+        "failure_id",
+        "code",
+        "name",
+        "scope"
+      ],
+      "title": "FailureRecord",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ObjectReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "object_id"
+      ],
+      "title": "ObjectReference",
+      "type": "object"
+    },
+    "PresenceState": {
+      "enum": [
+        "present",
+        "absent",
+        "unknown",
+        "not_applicable",
+        "not_requested",
+        "unavailable",
+        "withheld",
+        "failed",
+        "ambiguous"
+      ],
+      "title": "PresenceState",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "ReviewState": {
+      "enum": [
+        "unreviewed",
+        "machine_checked",
+        "human_reviewed",
+        "approved",
+        "rejected",
+        "disputed",
+        "superseded"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "fatal"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    },
+    "WarningId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "WarningRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "related_objects": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObjectReference"
+          },
+          "title": "Related Objects",
+          "type": "array"
+        },
+        "remediation": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remediation"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "scope": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "warning_id": {
+          "$ref": "#/$defs/WarningId"
+        }
+      },
+      "required": [
+        "warning_id",
+        "code",
+        "name",
+        "severity",
+        "scope"
+      ],
+      "title": "WarningRecord",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:qualified-value:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "alternatives": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AlternativeRecord"
+      },
+      "title": "Alternatives",
+      "type": "array"
+    },
+    "confidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ConfidenceRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "evidence_method": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EvidenceMethod"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "failures": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/FailureRecord"
+      },
+      "title": "Failures",
+      "type": "array"
+    },
+    "presence": {
+      "$ref": "#/$defs/PresenceState"
+    },
+    "review_state": {
+      "$ref": "#/$defs/ReviewState",
+      "default": "unreviewed"
+    },
+    "value": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Value"
+    },
+    "warnings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/WarningRecord"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "presence"
+  ],
+  "title": "QualifiedValue",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

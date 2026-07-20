@@ -1,0 +1,17 @@
+{
+  "alternatives": [],
+  "failures": [
+    {
+      "code": "COC-F-020",
+      "failure_id": "019f6fca-9df7-75c0-a30a-2094b9d40e09",
+      "name": "corrupt_or_missing_payload",
+      "related_objects": [],
+      "retryable": false,
+      "scope": "payload",
+      "severity": "error"
+    }
+  ],
+  "presence": "failed",
+  "review_state": "unreviewed",
+  "warnings": []
+}

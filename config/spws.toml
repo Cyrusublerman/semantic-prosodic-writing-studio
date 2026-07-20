@@ -1,0 +1,30 @@
+[pkl]
+repository_path = "../Library"
+read_mode = "snapshot"
+write_mode = "promotion_only"
+cache_path = "~/.local/share/spws/pkl-index"
+
+[runtime]
+# All mutable SPWS state lives outside both Git repositories.
+data_root = "~/.local/share/spws"
+workspace_path = "~/.local/share/spws/workspace"
+manuscripts_path = "~/.local/share/spws/manuscripts"
+runs_path = "~/.local/share/spws/runs"
+models_path = "~/.local/share/spws/models"
+promotions_path = "~/.local/share/spws/promotions"
+
+[wordrare]
+storage_path = "~/.local/share/spws/wordrare"
+database_filename = "wordrare.db"
+
+[embeddings]
+enabled = false
+model_id = "sentence-transformers/all-MiniLM-L6-v2"
+model_version = "unspecified"
+require_lexical_gate = true
+
+[policy]
+fail_closed_on_unknown_rights = true
+fail_closed_on_unknown_privacy = true
+allow_working_tree_reads = true
+allow_remote_git = false

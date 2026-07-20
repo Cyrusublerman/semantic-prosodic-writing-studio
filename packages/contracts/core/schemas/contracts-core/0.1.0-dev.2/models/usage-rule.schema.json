@@ -1,0 +1,510 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "AgentId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "AgentReference": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "$ref": "#/$defs/AgentId"
+        },
+        "agent_type": {
+          "$ref": "#/$defs/AgentType"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "agent_id",
+        "agent_type"
+      ],
+      "title": "AgentReference",
+      "type": "object"
+    },
+    "AgentType": {
+      "enum": [
+        "person",
+        "organisation",
+        "software_component",
+        "model",
+        "service",
+        "system"
+      ],
+      "title": "AgentType",
+      "type": "string"
+    },
+    "AssertionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "AuthorityTier": {
+      "enum": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ],
+      "title": "AuthorityTier",
+      "type": "integer"
+    },
+    "ConstraintOperator": {
+      "enum": [
+        "equals",
+        "not_equals",
+        "in",
+        "not_in",
+        "lte",
+        "gte",
+        "contains"
+      ],
+      "title": "ConstraintOperator",
+      "type": "string"
+    },
+    "DutyRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "duty_type": {
+          "title": "Duty Type",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "satisfied": {
+          "default": false,
+          "title": "Satisfied",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duty_type"
+      ],
+      "title": "DutyRecord",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "source": {
+          "$ref": "#/$defs/ObjectReference"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UtcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "verifier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ObjectReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "object_id"
+      ],
+      "title": "ObjectReference",
+      "type": "object"
+    },
+    "PolicyConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "constraint_type": {
+          "title": "Constraint Type",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/ConstraintOperator",
+          "default": "equals"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        }
+      },
+      "required": [
+        "constraint_type",
+        "value"
+      ],
+      "title": "PolicyConstraint",
+      "type": "object"
+    },
+    "PolicyEffect": {
+      "enum": [
+        "permit",
+        "prohibit"
+      ],
+      "title": "PolicyEffect",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "RuleId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "TimeWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "TimeWindow",
+      "type": "object"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:usage-rule:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgentReference"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "authority_tier": {
+      "$ref": "#/$defs/AuthorityTier"
+    },
+    "constraints": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PolicyConstraint"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "duties": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DutyRecord"
+      },
+      "title": "Duties",
+      "type": "array"
+    },
+    "effect": {
+      "$ref": "#/$defs/PolicyEffect"
+    },
+    "effective_window": {
+      "$ref": "#/$defs/TimeWindow",
+      "default": {
+        "end": null,
+        "start": null
+      }
+    },
+    "evidence": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/EvidenceRecord"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "explanation": {
+      "anyOf": [
+        {
+          "maxLength": 4096,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Explanation"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "override_lower_authority": {
+      "default": false,
+      "title": "Override Lower Authority",
+      "type": "boolean"
+    },
+    "purpose": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purpose"
+    },
+    "rule_id": {
+      "$ref": "#/$defs/RuleId"
+    },
+    "source_assertions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AssertionId"
+      },
+      "title": "Source Assertions",
+      "type": "array"
+    },
+    "target": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ObjectReference"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "rule_id",
+    "operation",
+    "effect",
+    "authority_tier"
+  ],
+  "title": "UsageRule",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

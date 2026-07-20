@@ -1,0 +1,463 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "CanonicalisationMethod": {
+      "enum": [
+        "none",
+        "unicode_profile",
+        "rfc8785_jcs",
+        "domain_projection"
+      ],
+      "title": "CanonicalisationMethod",
+      "type": "string"
+    },
+    "CanonicalisationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/CanonicalisationMethod"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "CanonicalisationRecord",
+      "type": "object"
+    },
+    "DigestAlgorithm": {
+      "enum": [
+        "sha-256"
+      ],
+      "title": "DigestAlgorithm",
+      "type": "string"
+    },
+    "DigestBasis": {
+      "enum": [
+        "raw_bytes",
+        "utf8_text",
+        "jcs_json",
+        "record_projection"
+      ],
+      "title": "DigestBasis",
+      "type": "string"
+    },
+    "DigestRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/DigestAlgorithm",
+          "default": "sha-256"
+        },
+        "basis": {
+          "$ref": "#/$defs/DigestBasis"
+        },
+        "byte_length": {
+          "minimum": 0,
+          "title": "Byte Length",
+          "type": "integer"
+        },
+        "canonicalisation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanonicalisationRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "character_encoding": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Encoding"
+        },
+        "media_type": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Type"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Value",
+          "type": "string"
+        },
+        "verification_state": {
+          "$ref": "#/$defs/VerificationState",
+          "default": "unverified"
+        }
+      },
+      "required": [
+        "value",
+        "basis",
+        "byte_length"
+      ],
+      "title": "DigestRecord",
+      "type": "object"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ObjectReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "object_id"
+      ],
+      "title": "ObjectReference",
+      "type": "object"
+    },
+    "PrivacyState": {
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private",
+        "unknown"
+      ],
+      "title": "PrivacyState",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "RightsState": {
+      "enum": [
+        "public",
+        "internal",
+        "restricted",
+        "private",
+        "unknown"
+      ],
+      "title": "RightsState",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "fatal"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    },
+    "VerificationState": {
+      "enum": [
+        "unverified",
+        "verified",
+        "mismatch"
+      ],
+      "title": "VerificationState",
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "WarningId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "WarningRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "related_objects": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObjectReference"
+          },
+          "title": "Related Objects",
+          "type": "array"
+        },
+        "remediation": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remediation"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "scope": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "warning_id": {
+          "$ref": "#/$defs/WarningId"
+        }
+      },
+      "required": [
+        "warning_id",
+        "code",
+        "name",
+        "severity",
+        "scope"
+      ],
+      "title": "WarningRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "commit_sha": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit Sha"
+    },
+    "content_digest": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DigestRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "extracted_at": {
+      "$ref": "#/$defs/UtcDateTime"
+    },
+    "object_uid": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Object Uid"
+    },
+    "privacy": {
+      "$ref": "#/$defs/PrivacyState",
+      "default": "unknown"
+    },
+    "relative_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Relative Path"
+    },
+    "repository_identity": {
+      "title": "Repository Identity",
+      "type": "string"
+    },
+    "reproducible": {
+      "default": true,
+      "title": "Reproducible",
+      "type": "boolean"
+    },
+    "rights": {
+      "$ref": "#/$defs/RightsState",
+      "default": "unknown"
+    },
+    "warnings": {
+      "items": {
+        "$ref": "#/$defs/WarningRecord"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "working_tree": {
+      "default": false,
+      "title": "Working Tree",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "repository_identity",
+    "extracted_at"
+  ],
+  "title": "ProvenanceStamp",
+  "type": "object"
+}

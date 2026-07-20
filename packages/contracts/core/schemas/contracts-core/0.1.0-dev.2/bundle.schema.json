@@ -1,0 +1,124 @@
+{
+  "$id": "urn:pkl:spws:schema:contracts-core:bundle:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "$ref": "models/schema-reference.schema.json"
+    },
+    {
+      "$ref": "models/version-range.schema.json"
+    },
+    {
+      "$ref": "models/external-identifier.schema.json"
+    },
+    {
+      "$ref": "models/agent-reference.schema.json"
+    },
+    {
+      "$ref": "models/object-reference.schema.json"
+    },
+    {
+      "$ref": "models/version-reference.schema.json"
+    },
+    {
+      "$ref": "models/reference-set.schema.json"
+    },
+    {
+      "$ref": "models/time-window.schema.json"
+    },
+    {
+      "$ref": "models/digest-record.schema.json"
+    },
+    {
+      "$ref": "models/extension-record.schema.json"
+    },
+    {
+      "$ref": "models/activity-reference.schema.json"
+    },
+    {
+      "$ref": "models/provenance-relation.schema.json"
+    },
+    {
+      "$ref": "models/contribution-record.schema.json"
+    },
+    {
+      "$ref": "models/direct-provenance-summary.schema.json"
+    },
+    {
+      "$ref": "models/evidence-record.schema.json"
+    },
+    {
+      "$ref": "models/rights-assertion.schema.json"
+    },
+    {
+      "$ref": "models/policy-constraint.schema.json"
+    },
+    {
+      "$ref": "models/duty-record.schema.json"
+    },
+    {
+      "$ref": "models/usage-rule.schema.json"
+    },
+    {
+      "$ref": "models/policy-context.schema.json"
+    },
+    {
+      "$ref": "models/policy-decision.schema.json"
+    },
+    {
+      "$ref": "models/privacy-policy.schema.json"
+    },
+    {
+      "$ref": "models/retention-policy.schema.json"
+    },
+    {
+      "$ref": "models/direct-policy-summary.schema.json"
+    },
+    {
+      "$ref": "models/confidence-record.schema.json"
+    },
+    {
+      "$ref": "models/alternative-record.schema.json"
+    },
+    {
+      "$ref": "models/review-record.schema.json"
+    },
+    {
+      "$ref": "models/warning-record.schema.json"
+    },
+    {
+      "$ref": "models/failure-record.schema.json"
+    },
+    {
+      "$ref": "models/qualified-value.schema.json"
+    },
+    {
+      "$ref": "models/text-quote-selector.schema.json"
+    },
+    {
+      "$ref": "models/text-representation.schema.json"
+    },
+    {
+      "$ref": "models/text-span.schema.json"
+    },
+    {
+      "$ref": "models/span-map-segment.schema.json"
+    },
+    {
+      "$ref": "models/span-mapping.schema.json"
+    },
+    {
+      "$ref": "models/relocation-record.schema.json"
+    },
+    {
+      "$ref": "models/payload-descriptor.schema.json"
+    },
+    {
+      "$ref": "models/core-object-envelope.schema.json"
+    },
+    {
+      "$ref": "models/policy-evidence-record.schema.json"
+    }
+  ],
+  "title": "Contracts Core Bundle"
+}

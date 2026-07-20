@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-ingestion"
+version = "0.1.0"
+description = "SPWS text and markdown ingestion"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-contracts-core",
+  "python-frontmatter>=1.1.0",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

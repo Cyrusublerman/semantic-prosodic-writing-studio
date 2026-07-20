@@ -1,0 +1,15 @@
+{
+  "canonical_case_count": 4,
+  "checks": {
+    "ajv_fixture_validation": true,
+    "canonical_byte_parity": true,
+    "hyperjump_fixture_validation": true,
+    "npm_audit_zero_known_vulnerabilities": true,
+    "python_fixture_validation": true,
+    "typescript_typecheck": true
+  },
+  "fixture_count": 21,
+  "model_schema_count": 39,
+  "ok": true,
+  "release": "0.1.0-dev.2"
+}

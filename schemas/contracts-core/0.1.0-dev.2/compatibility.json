@@ -1,0 +1,9 @@
+{
+  "backward_compatibility_claimed": false,
+  "baseline": true,
+  "notes": [
+    "First immutable prerelease; proving contracts remain required."
+  ],
+  "supported_major": 0,
+  "version": "0.1.0-dev.2"
+}

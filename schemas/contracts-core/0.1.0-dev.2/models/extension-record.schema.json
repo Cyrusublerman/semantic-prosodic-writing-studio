@@ -1,0 +1,71 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "JsonValue": {},
+    "SchemaReference": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema Digest"
+        },
+        "schema_id": {
+          "$ref": "#/$defs/AbsoluteUri"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/SemVer"
+        }
+      },
+      "required": [
+        "schema_id",
+        "schema_version"
+      ],
+      "title": "SchemaReference",
+      "type": "object"
+    },
+    "SemVer": {
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:extension-record:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "critical": {
+      "default": false,
+      "title": "Critical",
+      "type": "boolean"
+    },
+    "namespace": {
+      "pattern": "^x\\.(?:[a-z0-9][a-z0-9-]*\\.)+[a-z0-9][a-z0-9-]*$",
+      "title": "Namespace",
+      "type": "string"
+    },
+    "schema": {
+      "$ref": "#/$defs/SchemaReference"
+    },
+    "value": {
+      "$ref": "#/$defs/JsonValue"
+    }
+  },
+  "required": [
+    "namespace",
+    "schema",
+    "value"
+  ],
+  "title": "ExtensionRecord",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

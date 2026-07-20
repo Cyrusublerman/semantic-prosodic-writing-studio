@@ -1,0 +1,235 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "CanonicalisationMethod": {
+      "enum": [
+        "none",
+        "unicode_profile",
+        "rfc8785_jcs",
+        "domain_projection"
+      ],
+      "title": "CanonicalisationMethod",
+      "type": "string"
+    },
+    "CanonicalisationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/CanonicalisationMethod"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "CanonicalisationRecord",
+      "type": "object"
+    },
+    "DigestAlgorithm": {
+      "enum": [
+        "sha-256"
+      ],
+      "title": "DigestAlgorithm",
+      "type": "string"
+    },
+    "DigestBasis": {
+      "enum": [
+        "raw_bytes",
+        "utf8_text",
+        "jcs_json",
+        "record_projection"
+      ],
+      "title": "DigestBasis",
+      "type": "string"
+    },
+    "DigestRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/DigestAlgorithm",
+          "default": "sha-256"
+        },
+        "basis": {
+          "$ref": "#/$defs/DigestBasis"
+        },
+        "byte_length": {
+          "minimum": 0,
+          "title": "Byte Length",
+          "type": "integer"
+        },
+        "canonicalisation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanonicalisationRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "character_encoding": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Encoding"
+        },
+        "media_type": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Type"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Value",
+          "type": "string"
+        },
+        "verification_state": {
+          "$ref": "#/$defs/VerificationState",
+          "default": "unverified"
+        }
+      },
+      "required": [
+        "value",
+        "basis",
+        "byte_length"
+      ],
+      "title": "DigestRecord",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "PayloadKind": {
+      "enum": [
+        "embedded",
+        "object_store",
+        "external",
+        "tombstone"
+      ],
+      "title": "PayloadKind",
+      "type": "string"
+    },
+    "VerificationState": {
+      "enum": [
+        "unverified",
+        "verified",
+        "mismatch"
+      ],
+      "title": "VerificationState",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:payload-descriptor:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "digest": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DigestRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "location_reference": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Location Reference"
+    },
+    "media_type": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Media Type"
+    },
+    "payload_kind": {
+      "$ref": "#/$defs/PayloadKind"
+    },
+    "size_bytes": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Size Bytes"
+    },
+    "uri": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AbsoluteUri"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "value": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/JsonValue"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "payload_kind"
+  ],
+  "title": "PayloadDescriptor",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

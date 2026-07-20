@@ -1,0 +1,14 @@
+{
+  "alternatives": [
+    {
+      "value": "a"
+    },
+    {
+      "value": "b"
+    }
+  ],
+  "failures": [],
+  "presence": "ambiguous",
+  "review_state": "unreviewed",
+  "warnings": []
+}

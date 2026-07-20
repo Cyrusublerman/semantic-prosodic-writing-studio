@@ -1,0 +1,172 @@
+{
+  "validator": "ajv",
+  "version": "8.20.0",
+  "ok": true,
+  "fixtures": [
+    {
+      "id": "minimal-envelope",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "complete-envelope",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-present",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-ambiguous",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-unavailable",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-withheld",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "qualified-failed",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-identity",
+      "valid": false,
+      "errors": [
+        {
+          "instancePath": "/object_id",
+          "schemaPath": "#/$defs/ObjectId/pattern",
+          "keyword": "pattern",
+          "params": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          },
+          "message": "must match pattern \"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\""
+        },
+        {
+          "instancePath": "/object_id",
+          "schemaPath": "#/$defs/ObjectId/format",
+          "keyword": "format",
+          "params": {
+            "format": "uuid"
+          },
+          "message": "must match format \"uuid\""
+        }
+      ],
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-digest",
+      "valid": false,
+      "errors": [
+        {
+          "instancePath": "",
+          "schemaPath": "#/additionalProperties",
+          "keyword": "additionalProperties",
+          "params": {
+            "additionalProperty": "verified"
+          },
+          "message": "must NOT have additional properties"
+        },
+        {
+          "instancePath": "/value",
+          "schemaPath": "#/properties/value/pattern",
+          "keyword": "pattern",
+          "params": {
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "message": "must match pattern \"^[0-9a-f]{64}$\""
+        }
+      ],
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-parent-self-cycle",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-policy-local-only-permit",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "invalid-provenance-self-relation",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "unicode-emoji-span",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "unicode-combining-span",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "crlf-span-mapping",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "repeated-quote-span",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "unknown-rights-assertion",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "external-transmission-denial",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "mixed-source-contribution",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "content-free-tombstone",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    },
+    {
+      "id": "critical-extension",
+      "valid": true,
+      "errors": [],
+      "matched_expectation": true
+    }
+  ],
+  "failures": []
+}

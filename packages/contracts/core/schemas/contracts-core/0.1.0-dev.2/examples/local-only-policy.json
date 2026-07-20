@@ -1,0 +1,15 @@
+{
+  "decisions": [],
+  "policy_bundle_refs": [],
+  "privacy": {
+    "allowed_recipients": [],
+    "consent_required": false,
+    "privacy_class": "private",
+    "transmission_class": "local_only"
+  },
+  "retention": {
+    "deletion_mode": "tombstone_only",
+    "legal_hold": false,
+    "retention_class": "project_lifetime"
+  }
+}

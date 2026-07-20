@@ -1,0 +1,600 @@
+{
+  "$defs": {
+    "AbsoluteUri": {
+      "type": "string"
+    },
+    "ActivityId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ActivityReference": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "$ref": "#/$defs/ActivityId"
+        },
+        "activity_type": {
+          "title": "Activity Type",
+          "type": "string"
+        },
+        "component_version": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component Version"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UtcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "parameters_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameters Digest"
+        },
+        "responsible_agents": {
+          "items": {
+            "$ref": "#/$defs/AgentReference"
+          },
+          "title": "Responsible Agents",
+          "type": "array"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RunId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "started_at": {
+          "$ref": "#/$defs/UtcDateTime"
+        },
+        "status": {
+          "$ref": "#/$defs/ProcessingState"
+        },
+        "step_run_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StepRunId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "activity_id",
+        "activity_type",
+        "status",
+        "started_at",
+        "responsible_agents"
+      ],
+      "title": "ActivityReference",
+      "type": "object"
+    },
+    "AgentId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "AgentReference": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "$ref": "#/$defs/AgentId"
+        },
+        "agent_type": {
+          "$ref": "#/$defs/AgentType"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "agent_id",
+        "agent_type"
+      ],
+      "title": "AgentReference",
+      "type": "object"
+    },
+    "AgentType": {
+      "enum": [
+        "person",
+        "organisation",
+        "software_component",
+        "model",
+        "service",
+        "system"
+      ],
+      "title": "AgentType",
+      "type": "string"
+    },
+    "ContributionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ContributionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ActivityId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "agent": {
+          "$ref": "#/$defs/AgentReference"
+        },
+        "contribution_id": {
+          "$ref": "#/$defs/ContributionId"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "review_state": {
+          "$ref": "#/$defs/ReviewState",
+          "default": "unreviewed"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "sources": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/VersionReference"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "target": {
+          "$ref": "#/$defs/VersionReference"
+        }
+      },
+      "required": [
+        "contribution_id",
+        "role",
+        "agent",
+        "target"
+      ],
+      "title": "ContributionRecord",
+      "type": "object"
+    },
+    "ExternalIdentifier": {
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        "resolution_state": {
+          "$ref": "#/$defs/ResolutionState",
+          "default": "unresolved"
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "namespace",
+        "value"
+      ],
+      "title": "ExternalIdentifier",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ObjectReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "external_identifiers": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ExternalIdentifier"
+          },
+          "title": "External Identifiers",
+          "type": "array"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AbsoluteUri"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "object_id"
+      ],
+      "title": "ObjectReference",
+      "type": "object"
+    },
+    "ProcessingState": {
+      "enum": [
+        "pending",
+        "running",
+        "awaiting_human",
+        "succeeded",
+        "partially_succeeded",
+        "failed",
+        "cancelled",
+        "timed_out",
+        "blocked",
+        "skipped"
+      ],
+      "title": "ProcessingState",
+      "type": "string"
+    },
+    "ProvenanceRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ActivityId"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "entity_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Role"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method"
+        },
+        "object": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VersionReference"
+            },
+            {
+              "$ref": "#/$defs/ObjectReference"
+            }
+          ],
+          "title": "Object"
+        },
+        "parameters_digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameters Digest"
+        },
+        "relation_id": {
+          "$ref": "#/$defs/RelationId"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "review_state": {
+          "$ref": "#/$defs/ReviewState",
+          "default": "unreviewed"
+        },
+        "source_span_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Span Ids",
+          "type": "array"
+        },
+        "subject": {
+          "$ref": "#/$defs/VersionReference"
+        },
+        "target_span_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Span Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "relation_id",
+        "relation_type",
+        "subject",
+        "object"
+      ],
+      "title": "ProvenanceRelation",
+      "type": "object"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "RelationId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "ResolutionState": {
+      "enum": [
+        "unresolved",
+        "resolved",
+        "unavailable",
+        "invalid"
+      ],
+      "title": "ResolutionState",
+      "type": "string"
+    },
+    "ReviewState": {
+      "enum": [
+        "unreviewed",
+        "machine_checked",
+        "human_reviewed",
+        "approved",
+        "rejected",
+        "disputed",
+        "superseded"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    },
+    "RunId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "StepRunId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:direct-provenance-summary:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contribution_records": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ContributionRecord"
+      },
+      "title": "Contribution Records",
+      "type": "array"
+    },
+    "creation_activity": {
+      "$ref": "#/$defs/ActivityReference"
+    },
+    "creator": {
+      "$ref": "#/$defs/AgentReference"
+    },
+    "direct_relations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ProvenanceRelation"
+      },
+      "title": "Direct Relations",
+      "type": "array"
+    },
+    "full_provenance_records": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ObjectReference"
+      },
+      "title": "Full Provenance Records",
+      "type": "array"
+    }
+  },
+  "required": [
+    "creator",
+    "creation_activity"
+  ],
+  "title": "DirectProvenanceSummary",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

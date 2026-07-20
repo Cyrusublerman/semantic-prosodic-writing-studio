@@ -1,0 +1,78 @@
+{
+  "text": {
+    "representation_types": [
+      "raw_bytes",
+      "decoded_text",
+      "normalised_text",
+      "rendered_text",
+      "token_sequence",
+      "structured_json"
+    ],
+    "span_types": [
+      "code_point_range",
+      "byte_range",
+      "utf16_range",
+      "token_range",
+      "line_column_range",
+      "text_quote"
+    ],
+    "mapping_kinds": [
+      "equal",
+      "replace",
+      "insert",
+      "delete",
+      "reorder",
+      "unknown"
+    ],
+    "mapping_results": [
+      "exact",
+      "bounded",
+      "ambiguous",
+      "unmappable"
+    ],
+    "relocation_results": [
+      "unique",
+      "ambiguous",
+      "missing",
+      "invalid_source",
+      "representation_mismatch"
+    ],
+    "normalisation_profiles": [
+      "raw-preserved",
+      "unicode-nfc-v1",
+      "newline-lf-v1"
+    ],
+    "segmentation_profiles": [
+      "uax29-runtime-recorded-v1",
+      "poetry-line-literal-v1"
+    ]
+  },
+  "reproducibility": {
+    "classes": [
+      {
+        "id": "R0",
+        "name": "trace_only"
+      },
+      {
+        "id": "R1",
+        "name": "schema_replayable"
+      },
+      {
+        "id": "R2",
+        "name": "operationally_replayable"
+      },
+      {
+        "id": "R3",
+        "name": "deterministic_semantic"
+      },
+      {
+        "id": "R4",
+        "name": "deterministic_exact"
+      },
+      {
+        "id": "R5",
+        "name": "independently_verifiable"
+      }
+    ]
+  }
+}

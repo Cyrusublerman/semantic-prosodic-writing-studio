@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "MappingId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "MappingKind": {
+      "enum": [
+        "equal",
+        "replace",
+        "insert",
+        "delete",
+        "reorder",
+        "unknown"
+      ],
+      "title": "MappingKind",
+      "type": "string"
+    },
+    "RepresentationId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "SpanMapSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "derived_end": {
+          "minimum": 0,
+          "title": "Derived End",
+          "type": "integer"
+        },
+        "derived_start": {
+          "minimum": 0,
+          "title": "Derived Start",
+          "type": "integer"
+        },
+        "kind": {
+          "$ref": "#/$defs/MappingKind"
+        },
+        "raw_end": {
+          "minimum": 0,
+          "title": "Raw End",
+          "type": "integer"
+        },
+        "raw_start": {
+          "minimum": 0,
+          "title": "Raw Start",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "raw_start",
+        "raw_end",
+        "derived_start",
+        "derived_end",
+        "kind"
+      ],
+      "title": "SpanMapSegment",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:span-mapping:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "mapping_id": {
+      "$ref": "#/$defs/MappingId"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/SpanMapSegment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "source_length": {
+      "minimum": 0,
+      "title": "Source Length",
+      "type": "integer"
+    },
+    "source_representation_id": {
+      "$ref": "#/$defs/RepresentationId"
+    },
+    "target_length": {
+      "minimum": 0,
+      "title": "Target Length",
+      "type": "integer"
+    },
+    "target_representation_id": {
+      "$ref": "#/$defs/RepresentationId"
+    }
+  },
+  "required": [
+    "mapping_id",
+    "source_representation_id",
+    "target_representation_id",
+    "segments",
+    "source_length",
+    "target_length"
+  ],
+  "title": "SpanMapping",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": [],
+  "failures": [],
+  "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+  "object_type": "spws.object.tombstone",
+  "parent_version_ids": [],
+  "payload": {
+    "payload_kind": "tombstone"
+  },
+  "policy": {
+    "decisions": [],
+    "policy_bundle_refs": [],
+    "privacy": {
+      "allowed_recipients": [],
+      "consent_required": false,
+      "privacy_class": "private",
+      "transmission_class": "local_only"
+    },
+    "retention": {
+      "deletion_mode": "tombstone_only",
+      "legal_hold": false,
+      "retention_class": "project_lifetime"
+    }
+  },
+  "provenance": {
+    "contribution_records": [],
+    "creation_activity": {
+      "activity_id": "019f6fca-9df7-75c0-a30a-1f831fd36991",
+      "activity_type": "spws.activity.ingest",
+      "ended_at": "2026-07-17T00:00:01Z",
+      "responsible_agents": [
+        {
+          "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+          "agent_type": "person",
+          "display_name": "Alexander Einoder",
+          "external_identifiers": []
+        }
+      ],
+      "started_at": "2026-07-17T00:00:00Z",
+      "status": "succeeded"
+    },
+    "creator": {
+      "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+      "agent_type": "person",
+      "display_name": "Alexander Einoder",
+      "external_identifiers": []
+    },
+    "direct_relations": [],
+    "full_provenance_records": []
+  },
+  "review_state": "unreviewed",
+  "reviews": [],
+  "schema": {
+    "schema_id": "urn:pkl:spws:schema:contracts-core:core-object-envelope:0.1.0-dev.2",
+    "schema_version": "0.1.0-dev.2"
+  },
+  "state": "tombstoned",
+  "version_id": "019f6fca-9df7-75c0-a30a-208aa912abfc",
+  "warnings": []
+}

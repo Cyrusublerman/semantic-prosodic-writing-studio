@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "PrivacyState": {
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private",
+        "unknown"
+      ],
+      "title": "PrivacyState",
+      "type": "string"
+    },
+    "RightsState": {
+      "enum": [
+        "public",
+        "internal",
+        "restricted",
+        "private",
+        "unknown"
+      ],
+      "title": "RightsState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "commit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit"
+    },
+    "include_working_tree": {
+      "default": false,
+      "title": "Include Working Tree",
+      "type": "boolean"
+    },
+    "object_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Object Types",
+      "type": "array"
+    },
+    "privacy_filter": {
+      "items": {
+        "$ref": "#/$defs/PrivacyState"
+      },
+      "title": "Privacy Filter",
+      "type": "array"
+    },
+    "relationships": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Relationships",
+      "type": "array"
+    },
+    "result_limit": {
+      "default": 20,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Result Limit",
+      "type": "integer"
+    },
+    "rights_filter": {
+      "items": {
+        "$ref": "#/$defs/RightsState"
+      },
+      "title": "Rights Filter",
+      "type": "array"
+    },
+    "subjects": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Subjects",
+      "type": "array"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    }
+  },
+  "title": "PKLQuery",
+  "type": "object"
+}

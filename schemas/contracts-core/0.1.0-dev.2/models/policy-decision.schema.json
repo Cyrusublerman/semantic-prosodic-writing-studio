@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "AuthorityTier": {
+      "enum": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ],
+      "title": "AuthorityTier",
+      "type": "integer"
+    },
+    "DecisionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "PolicyDecisionOutcome": {
+      "enum": [
+        "permit",
+        "deny",
+        "deny_pending_duty",
+        "indeterminate"
+      ],
+      "title": "PolicyDecisionOutcome",
+      "type": "string"
+    },
+    "RuleId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:policy-decision:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed": {
+      "title": "Allowed",
+      "type": "boolean"
+    },
+    "applied_rule_ids": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RuleId"
+      },
+      "title": "Applied Rule Ids",
+      "type": "array"
+    },
+    "decision_id": {
+      "$ref": "#/$defs/DecisionId"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/UtcDateTime"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "highest_authority_tier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuthorityTier"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "outcome": {
+      "$ref": "#/$defs/PolicyDecisionOutcome"
+    },
+    "rejected_rule_ids": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RuleId"
+      },
+      "title": "Rejected Rule Ids",
+      "type": "array"
+    },
+    "unsatisfied_duties": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unsatisfied Duties",
+      "type": "array"
+    }
+  },
+  "required": [
+    "decision_id",
+    "operation",
+    "outcome",
+    "allowed",
+    "explanation",
+    "evaluated_at"
+  ],
+  "title": "PolicyDecision",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

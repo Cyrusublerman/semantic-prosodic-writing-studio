@@ -1,0 +1,7 @@
+{
+  "algorithm": "sha-256",
+  "basis": "raw_bytes",
+  "byte_length": 3,
+  "value": "bad",
+  "verified": false
+}

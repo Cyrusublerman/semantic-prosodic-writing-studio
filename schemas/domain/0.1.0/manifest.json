@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1.0",
+  "models": {
+    "input-package": "domain/0.1.0/input-package.schema.json",
+    "raw-source": "domain/0.1.0/raw-source.schema.json",
+    "pkl-query": "domain/0.1.0/pkl-query.schema.json",
+    "pkl-result": "domain/0.1.0/pkl-result.schema.json",
+    "pkl-promotion-bundle": "domain/0.1.0/pkl-promotion-bundle.schema.json",
+    "revision-decision": "domain/0.1.0/revision-decision.schema.json",
+    "run-manifest": "domain/0.1.0/run-manifest.schema.json",
+    "provenance-stamp": "domain/0.1.0/provenance-stamp.schema.json",
+    "text-span": "domain/0.1.0/text-span.schema.json",
+    "pkl-relationship": "domain/0.1.0/pkl-relationship.schema.json",
+    "conflict-info": "domain/0.1.0/conflict-info.schema.json"
+  }
+}

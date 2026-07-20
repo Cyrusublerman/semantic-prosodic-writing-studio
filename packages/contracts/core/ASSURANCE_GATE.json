@@ -1,0 +1,123 @@
+{
+  "gate_version": "1.0.0",
+  "programme": "Core Object Contract Phase 5.5 Assurance",
+  "baseline_release": "0.1.0-dev.2",
+  "phase6_entry": "blocked",
+  "stable_promotion": "blocked",
+  "rules": {
+    "waivers_require_expiry": true,
+    "waivers_forbidden_for": [
+      "integrity",
+      "privacy",
+      "deletion_honesty",
+      "provenance_survival",
+      "compatibility_claims"
+    ]
+  },
+  "gates": [
+    {
+      "id": "A-GOV-001",
+      "title": "Normative specification approved",
+      "status": "drafted",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "docs/specification/core-object-contract-0.1.md"
+    },
+    {
+      "id": "A-ADR-001",
+      "title": "Foundational ADR set approved",
+      "status": "drafted",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "docs/adr/"
+    },
+    {
+      "id": "A-SEC-001",
+      "title": "Threat model reviewed",
+      "status": "drafted",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "docs/security/threat-model.md"
+    },
+    {
+      "id": "A-REP-001",
+      "title": "Dedicated runtime repository established",
+      "status": "pending_external_action",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": null
+    },
+    {
+      "id": "A-REL-001",
+      "title": "Immutable baseline tagged and published",
+      "status": "pending_external_action",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": null
+    },
+    {
+      "id": "A-COMP-001",
+      "title": "Compatibility and deprecation policy approved",
+      "status": "drafted",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "docs/governance/compatibility-policy.md"
+    },
+    {
+      "id": "A-TEST-001",
+      "title": "Critical invariant branch coverage reaches 100 percent",
+      "status": "pending",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": null
+    },
+    {
+      "id": "A-TEST-002",
+      "title": "Property, mutation and fuzz suites pass",
+      "status": "pending",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": null
+    },
+    {
+      "id": "A-XPLAT-001",
+      "title": "Supported runtime and operating-system matrix passes",
+      "status": "satisfied",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "ASSURANCE_BASELINE_REPORT.json"
+    },
+    {
+      "id": "A-SUPPLY-001",
+      "title": "Locked builds, SBOM, provenance and artifact signing",
+      "status": "partially_configured",
+      "required_for_phase6": false,
+      "required_for_stable": true,
+      "evidence": "docs/governance/release-policy.md"
+    },
+    {
+      "id": "A-LIC-001",
+      "title": "Code, schema, fixture and documentation licensing resolved",
+      "status": "pending_owner_decision",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "id": "A-REV-001",
+      "title": "Independent human review completed",
+      "status": "pending",
+      "required_for_phase6": true,
+      "required_for_stable": true,
+      "evidence": "docs/governance/human-review-protocol.md"
+    },
+    {
+      "id": "A-PKL-001",
+      "title": "PKL ontology debt remediated or bounded by expiring exceptions",
+      "status": "pending",
+      "required_for_phase6": false,
+      "required_for_stable": true,
+      "evidence": null
+    }
+  ]
+}

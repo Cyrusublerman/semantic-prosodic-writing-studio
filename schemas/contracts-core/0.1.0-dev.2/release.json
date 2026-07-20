@@ -1,0 +1,9 @@
+{
+  "bundle_schema_id": "urn:pkl:spws:schema:contracts-core:bundle:0.1.0-dev.2",
+  "fixture_count": 21,
+  "model_schema_count": 39,
+  "package": "contracts-core",
+  "schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+  "status": "prerelease",
+  "version": "0.1.0-dev.2"
+}

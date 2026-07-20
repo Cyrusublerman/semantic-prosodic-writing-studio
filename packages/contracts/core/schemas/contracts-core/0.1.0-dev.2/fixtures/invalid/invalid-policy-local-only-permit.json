@@ -1,0 +1,27 @@
+{
+  "decisions": [
+    {
+      "allowed": true,
+      "applied_rule_ids": [],
+      "decision_id": "019f6fca-9df7-75c0-a30a-1fcfab9cf9b7",
+      "evaluated_at": "2026-07-17T00:00:00Z",
+      "explanation": "bad",
+      "operation": "spws.operation.external_transmission",
+      "outcome": "permit",
+      "rejected_rule_ids": [],
+      "unsatisfied_duties": []
+    }
+  ],
+  "policy_bundle_refs": [],
+  "privacy": {
+    "allowed_recipients": [],
+    "consent_required": false,
+    "privacy_class": "private",
+    "transmission_class": "local_only"
+  },
+  "retention": {
+    "deletion_mode": "tombstone_only",
+    "legal_hold": false,
+    "retention_class": "project_lifetime"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "coordinate_profile": "unicode-code-point-zero-based-half-open-v1",
+  "end": 7,
+  "quote": {
+    "exact": "A",
+    "prefix": "\r\n",
+    "suffix": " repeated"
+  },
+  "representation_id": "019f6fca-9df7-75c0-a30a-1febe9e6781b",
+  "representation_version": {
+    "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+    "version_id": "019f6fca-9df7-75c0-a30a-1fab2a5c45b2"
+  },
+  "span_id": "repeat",
+  "start": 6
+}

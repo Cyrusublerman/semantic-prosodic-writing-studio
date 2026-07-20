@@ -1,0 +1,49 @@
+{
+  "canonical_case_count": 4,
+  "canonicalisation": {
+    "javascript": "canonicalize 3.0.0",
+    "python": "rfc8785 0.1.4"
+  },
+  "checks": {
+    "ajv_fixture_validation": true,
+    "canonical_byte_parity": true,
+    "hyperjump_fixture_validation": true,
+    "npm_audit_zero_known_vulnerabilities": true,
+    "python_fixture_validation": true,
+    "typescript_typecheck": true
+  },
+  "fixture_count": 21,
+  "invalid_fixture_count": 7,
+  "known_limits": [
+    "Schemas validate structure; Pydantic and context checks remain authoritative for cross-field semantics.",
+    "This is the first immutable prerelease schema package, so backward compatibility is not yet claimed.",
+    "InputPackage and RawSource proving contracts remain Phase 6 work."
+  ],
+  "model_schema_count": 39,
+  "next_phase": "Phase 6 proving contracts",
+  "release": "0.1.0-dev.2",
+  "stable_production_release": false,
+  "status": "phase5_schema_fixture_infrastructure_complete",
+  "tasks_completed": [
+    "COC-F-001",
+    "COC-F-002",
+    "COC-F-003",
+    "COC-F-004",
+    "COC-F-005",
+    "COC-F-006",
+    "COC-F-007",
+    "COC-F-008",
+    "COC-F-009",
+    "COC-F-010",
+    "COC-F-011"
+  ],
+  "type_generation": "json-schema-to-typescript 15.0.4",
+  "typescript": "6.0.3",
+  "valid_fixture_count": 14,
+  "validators": {
+    "javascript_independent": "@hyperjump/json-schema 1.17.7",
+    "javascript_runtime": "Ajv 8.20.0 Ajv2020 strict",
+    "python_json_schema": "jsonschema 4.26.0 Draft202012Validator",
+    "python_model": "Pydantic 2.13.4"
+  }
+}

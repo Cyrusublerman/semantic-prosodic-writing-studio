@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-cli"
+version = "0.1.0"
+description = "Semantic–Prosodic Writing Studio CLI"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-contracts-core",
+  "spws-storage",
+  "spws-ingestion",
+  "spws-analysis",
+  "spws-revision",
+  "spws-pkl-adapter",
+]
+
+[project.scripts]
+spws = "spws_cli.main:main"
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

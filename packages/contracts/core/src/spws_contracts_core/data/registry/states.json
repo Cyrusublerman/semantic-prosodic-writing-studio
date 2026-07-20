@@ -1,0 +1,64 @@
+{
+  "states": {
+    "presence": [
+      "present",
+      "absent",
+      "unknown",
+      "not_applicable",
+      "not_requested",
+      "unavailable",
+      "withheld",
+      "failed",
+      "ambiguous"
+    ],
+    "evidence_methods": [
+      "measured",
+      "parsed",
+      "retrieved",
+      "computed",
+      "derived",
+      "rule_inferred",
+      "statistical_inferred",
+      "model_inferred",
+      "human_asserted",
+      "human_reviewed",
+      "imported",
+      "defaulted"
+    ],
+    "review_states": [
+      "unreviewed",
+      "machine_checked",
+      "human_reviewed",
+      "approved",
+      "rejected",
+      "disputed",
+      "superseded"
+    ],
+    "processing_states": [
+      "pending",
+      "running",
+      "awaiting_human",
+      "succeeded",
+      "partially_succeeded",
+      "failed",
+      "cancelled",
+      "timed_out",
+      "blocked",
+      "skipped"
+    ],
+    "confidence_kinds": [
+      "probability",
+      "calibrated_probability",
+      "agreement",
+      "coverage",
+      "heuristic_strength",
+      "ordinal"
+    ],
+    "severity": [
+      "info",
+      "warning",
+      "error",
+      "fatal"
+    ]
+  }
+}

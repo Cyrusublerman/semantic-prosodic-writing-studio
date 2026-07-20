@@ -1,0 +1,315 @@
+{
+  "$defs": {
+    "CanonicalisationMethod": {
+      "enum": [
+        "none",
+        "unicode_profile",
+        "rfc8785_jcs",
+        "domain_projection"
+      ],
+      "title": "CanonicalisationMethod",
+      "type": "string"
+    },
+    "CanonicalisationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/CanonicalisationMethod"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "CanonicalisationRecord",
+      "type": "object"
+    },
+    "DigestAlgorithm": {
+      "enum": [
+        "sha-256"
+      ],
+      "title": "DigestAlgorithm",
+      "type": "string"
+    },
+    "DigestBasis": {
+      "enum": [
+        "raw_bytes",
+        "utf8_text",
+        "jcs_json",
+        "record_projection"
+      ],
+      "title": "DigestBasis",
+      "type": "string"
+    },
+    "DigestRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/DigestAlgorithm",
+          "default": "sha-256"
+        },
+        "basis": {
+          "$ref": "#/$defs/DigestBasis"
+        },
+        "byte_length": {
+          "minimum": 0,
+          "title": "Byte Length",
+          "type": "integer"
+        },
+        "canonicalisation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanonicalisationRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "character_encoding": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Encoding"
+        },
+        "media_type": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Type"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Value",
+          "type": "string"
+        },
+        "verification_state": {
+          "$ref": "#/$defs/VerificationState",
+          "default": "unverified"
+        }
+      },
+      "required": [
+        "value",
+        "basis",
+        "byte_length"
+      ],
+      "title": "DigestRecord",
+      "type": "object"
+    },
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "RepresentationId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RepresentationType": {
+      "enum": [
+        "raw_bytes",
+        "decoded_text",
+        "normalised_text",
+        "rendered_text",
+        "token_sequence",
+        "structured_json"
+      ],
+      "title": "RepresentationType",
+      "type": "string"
+    },
+    "VerificationState": {
+      "enum": [
+        "unverified",
+        "verified",
+        "mismatch"
+      ],
+      "title": "VerificationState",
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "VersionReference": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Digest"
+        },
+        "object_id": {
+          "$ref": "#/$defs/ObjectId"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RegisteredIdentifier"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "version_id": {
+          "$ref": "#/$defs/VersionId"
+        }
+      },
+      "required": [
+        "object_id",
+        "version_id"
+      ],
+      "title": "VersionReference",
+      "type": "object"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:text-representation:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "byte_length": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Byte Length"
+    },
+    "character_encoding": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Character Encoding"
+    },
+    "code_point_length": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Code Point Length"
+    },
+    "content_digest": {
+      "$ref": "#/$defs/DigestRecord"
+    },
+    "media_type": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Media Type",
+      "type": "string"
+    },
+    "normalisation_profile": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Normalisation Profile"
+    },
+    "owner_version": {
+      "$ref": "#/$defs/VersionReference"
+    },
+    "representation_id": {
+      "$ref": "#/$defs/RepresentationId"
+    },
+    "representation_type": {
+      "$ref": "#/$defs/RepresentationType"
+    },
+    "runtime_unicode_version": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runtime Unicode Version"
+    },
+    "segmentation_profile": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Segmentation Profile"
+    }
+  },
+  "required": [
+    "representation_id",
+    "owner_version",
+    "representation_type",
+    "media_type",
+    "content_digest"
+  ],
+  "title": "TextRepresentation",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

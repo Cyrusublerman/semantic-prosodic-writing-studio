@@ -1,0 +1,15 @@
+{
+  "object": {
+    "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+    "version_id": "019f6fca-9df7-75c0-a30a-1fab2a5c45b2"
+  },
+  "relation_id": "019f6fca-9df7-75c0-a30a-1fdc9a6c40c7",
+  "relation_type": "spws.prov.derived_from",
+  "review_state": "unreviewed",
+  "source_span_ids": [],
+  "subject": {
+    "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138",
+    "version_id": "019f6fca-9df7-75c0-a30a-1fab2a5c45b2"
+  },
+  "target_span_ids": []
+}

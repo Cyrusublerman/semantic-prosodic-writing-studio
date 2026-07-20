@@ -1,0 +1,7 @@
+{
+  "source_repository": "https://github.com/Cyrusublerman/Library",
+  "source_path": "10_WORKSPACE/Implementations/Semantic_Prosodic_Writing_Studio/contracts_core",
+  "extracted_at": "2026-07-19",
+  "target_path": "packages/contracts/core",
+  "note": "Extracted for SPWS runtime ownership. Library workspace copy remains until human-reviewed promotion replaces it with a released-contract reference."
+}

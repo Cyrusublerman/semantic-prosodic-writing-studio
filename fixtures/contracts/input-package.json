@@ -1,0 +1,18 @@
+{
+  "package_id": "inp-fixture-001",
+  "schema_version": "0.1.0",
+  "media_type": "text/plain",
+  "encoding": "utf-8",
+  "text": "The winter light falls soft on stone.",
+  "bytes_location": null,
+  "source_label": null,
+  "creator": null,
+  "capture_route": "direct_text",
+  "captured_at": "2026-07-19T07:04:38.634861Z",
+  "rights": "public",
+  "privacy": "public",
+  "retention_policy": null,
+  "requested_operations": [],
+  "user_metadata": {},
+  "warnings": []
+}

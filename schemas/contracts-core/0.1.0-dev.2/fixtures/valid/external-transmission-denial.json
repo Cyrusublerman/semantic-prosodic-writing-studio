@@ -1,0 +1,11 @@
+{
+  "allowed": false,
+  "applied_rule_ids": [],
+  "decision_id": "019f6fca-9df7-75c0-a30a-202f6103c282",
+  "evaluated_at": "2026-07-17T00:00:00Z",
+  "explanation": "local only",
+  "operation": "spws.operation.external_transmission",
+  "outcome": "deny",
+  "rejected_rule_ids": [],
+  "unsatisfied_duties": []
+}

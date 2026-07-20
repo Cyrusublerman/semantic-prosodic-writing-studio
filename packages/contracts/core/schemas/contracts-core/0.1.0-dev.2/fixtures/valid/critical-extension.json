@@ -1,0 +1,11 @@
+{
+  "critical": true,
+  "namespace": "x.example.test",
+  "schema": {
+    "schema_id": "urn:pkl:spws:schema:contracts-core:extension-record:0.1.0-dev.2",
+    "schema_version": "0.1.0-dev.2"
+  },
+  "value": {
+    "x": 1
+  }
+}

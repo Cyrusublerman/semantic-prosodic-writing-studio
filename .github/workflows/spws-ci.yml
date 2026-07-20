@@ -1,0 +1,100 @@
+name: SPWS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Python environment
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          export UV_INDEX_URL="${UV_INDEX_URL:-https://pypi.org/simple/}"
+          uv pip install -e "packages/contracts/core[test]" \
+            -e "packages/storage" -e "packages/ingestion" -e "packages/analysis" \
+            -e "packages/revision" -e "packages/adapters/pkl" -e "packages/spws_cli" \
+            -e "packages/wordrare" pytest pytest-cov jsonschema hypothesis
+
+      - name: Contract and adapter tests
+        run: |
+          source .venv/bin/activate
+          pytest packages/adapters/pkl/tests tests/contract tests/component \
+            tests/integration tests/end_to_end -q
+
+      - name: Domain schema presence
+        run: |
+          test -f schemas/domain/0.1.0/input-package.schema.json
+          test -f schemas/domain/0.1.0/pkl-promotion-bundle.schema.json
+          test -f schemas/domain/0.1.0/compatibility.json
+          test -f typescript/domain/0.1.0/index.d.ts
+
+      - name: Promotion no-write guard
+        run: |
+          source .venv/bin/activate
+          pytest packages/adapters/pkl/tests/test_promotion_no_write.py -q
+
+  pinned-library-snapshot:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.LIBRARY_CHECKOUT_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout Library at pinned SHA
+        uses: actions/checkout@v4
+        with:
+          repository: Cyrusublerman/Library
+          token: ${{ secrets.LIBRARY_CHECKOUT_TOKEN }}
+          path: _library
+          ref: ${{ vars.PKL_PINNED_SHA || 'main' }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Index pinned snapshot and query
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install -e "packages/contracts/core" -e "packages/adapters/pkl" -e "packages/storage" -e "packages/spws_cli"
+          export SPWS_CONFIG="$PWD/config/spws.toml"
+          # Point cache to runner temp; index from checked-out Library
+          python - <<'PY'
+          from pathlib import Path
+          from spws_pkl_adapter import index_repository, query_index
+          from spws_contracts_core.domain import PKLQuery
+          cache = Path("/tmp/spws-pkl-index")
+          manifest = index_repository(Path("_library"), cache_path=cache)
+          assert manifest["record_count"] >= 0
+          hits = query_index(PKLQuery(text="prosody", result_limit=5), cache)
+          print({"records": manifest["record_count"], "hits": len(hits)})
+          PY
+
+  release-artifacts:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/contracts-')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Build release bundle
+        run: |
+          uv venv .venv && source .venv/bin/activate
+          uv pip install -e "packages/contracts/core" build
+          bash tools/build_release_bundle.sh
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/release/*
+          generate_release_notes: true

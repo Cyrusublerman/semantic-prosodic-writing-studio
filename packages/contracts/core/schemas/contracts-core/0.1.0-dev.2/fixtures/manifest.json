@@ -1,0 +1,234 @@
+{
+  "fixture_count": 21,
+  "fixtures": [
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "minimal-envelope",
+      "model": "core-object-envelope",
+      "path": "fixtures/valid/minimal-envelope.json",
+      "tags": [
+        "minimal"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "complete-envelope",
+      "model": "core-object-envelope",
+      "path": "fixtures/valid/complete-envelope.json",
+      "tags": [
+        "complete",
+        "digest"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "qualified-present",
+      "model": "qualified-value",
+      "path": "fixtures/valid/qualified-present.json",
+      "tags": [
+        "present"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "qualified-ambiguous",
+      "model": "qualified-value",
+      "path": "fixtures/valid/qualified-ambiguous.json",
+      "tags": [
+        "ambiguous"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "qualified-unavailable",
+      "model": "qualified-value",
+      "path": "fixtures/valid/qualified-unavailable.json",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "qualified-withheld",
+      "model": "qualified-value",
+      "path": "fixtures/valid/qualified-withheld.json",
+      "tags": [
+        "withheld"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "qualified-failed",
+      "model": "qualified-value",
+      "path": "fixtures/valid/qualified-failed.json",
+      "tags": [
+        "failed"
+      ]
+    },
+    {
+      "expected_error_contains": "uuid",
+      "expected_python_valid": false,
+      "expected_schema_valid": false,
+      "id": "invalid-identity",
+      "model": "object-reference",
+      "path": "fixtures/invalid/invalid-identity.json",
+      "tags": [
+        "identity"
+      ]
+    },
+    {
+      "expected_error_contains": "64",
+      "expected_python_valid": false,
+      "expected_schema_valid": false,
+      "id": "invalid-digest",
+      "model": "digest-record",
+      "path": "fixtures/invalid/invalid-digest.json",
+      "tags": [
+        "digest"
+      ]
+    },
+    {
+      "expected_error_contains": "own parent",
+      "expected_python_valid": false,
+      "expected_schema_valid": true,
+      "id": "invalid-parent-self-cycle",
+      "model": "core-object-envelope",
+      "path": "fixtures/invalid/invalid-parent-self-cycle.json",
+      "tags": [
+        "parent-cycle"
+      ]
+    },
+    {
+      "expected_error_contains": "forbidden",
+      "expected_python_valid": false,
+      "expected_schema_valid": true,
+      "id": "invalid-policy-local-only-permit",
+      "model": "direct-policy-summary",
+      "path": "fixtures/invalid/invalid-policy-local-only-permit.json",
+      "tags": [
+        "policy",
+        "external-transmission"
+      ]
+    },
+    {
+      "expected_error_contains": "itself",
+      "expected_python_valid": false,
+      "expected_schema_valid": true,
+      "id": "invalid-provenance-self-relation",
+      "model": "provenance-relation",
+      "path": "fixtures/invalid/invalid-provenance-self-relation.json",
+      "tags": [
+        "provenance"
+      ]
+    },
+    {
+      "context": {
+        "text": "A😀é\r\nA repeated A"
+      },
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "unicode-emoji-span",
+      "model": "text-span",
+      "path": "fixtures/valid/unicode-emoji-span.json",
+      "tags": [
+        "unicode",
+        "emoji"
+      ]
+    },
+    {
+      "context": {
+        "text": "A😀é\r\nA repeated A"
+      },
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "unicode-combining-span",
+      "model": "text-span",
+      "path": "fixtures/valid/unicode-combining-span.json",
+      "tags": [
+        "unicode",
+        "combining-mark"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "crlf-span-mapping",
+      "model": "span-mapping",
+      "path": "fixtures/valid/crlf-span-mapping.json",
+      "tags": [
+        "crlf"
+      ]
+    },
+    {
+      "context": {
+        "text": "A😀é\r\nA repeated A"
+      },
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "repeated-quote-span",
+      "model": "text-span",
+      "path": "fixtures/valid/repeated-quote-span.json",
+      "tags": [
+        "repeated-quote"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "unknown-rights-assertion",
+      "model": "rights-assertion",
+      "path": "fixtures/valid/unknown-rights-assertion.json",
+      "tags": [
+        "rights"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "external-transmission-denial",
+      "model": "policy-decision",
+      "path": "fixtures/valid/external-transmission-denial.json",
+      "tags": [
+        "external-transmission"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "mixed-source-contribution",
+      "model": "contribution-record",
+      "path": "fixtures/valid/mixed-source-contribution.json",
+      "tags": [
+        "mixed-source"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "content-free-tombstone",
+      "model": "core-object-envelope",
+      "path": "fixtures/valid/content-free-tombstone.json",
+      "tags": [
+        "deletion"
+      ]
+    },
+    {
+      "expected_python_valid": true,
+      "expected_schema_valid": true,
+      "id": "critical-extension",
+      "model": "extension-record",
+      "path": "fixtures/valid/critical-extension.json",
+      "tags": [
+        "extension"
+      ]
+    }
+  ],
+  "release": "0.1.0-dev.2"
+}

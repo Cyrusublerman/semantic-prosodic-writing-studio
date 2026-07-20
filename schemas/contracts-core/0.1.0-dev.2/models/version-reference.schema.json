@@ -1,0 +1,59 @@
+{
+  "$defs": {
+    "ObjectId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    },
+    "RegisteredIdentifier": {
+      "type": "string"
+    },
+    "VersionId": {
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "type": "string"
+    }
+  },
+  "$id": "urn:pkl:spws:schema:contracts-core:version-reference:0.1.0-dev.2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "digest": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Digest"
+    },
+    "object_id": {
+      "$ref": "#/$defs/ObjectId"
+    },
+    "object_type": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RegisteredIdentifier"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "version_id": {
+      "$ref": "#/$defs/VersionId"
+    }
+  },
+  "required": [
+    "object_id",
+    "version_id"
+  ],
+  "title": "VersionReference",
+  "type": "object",
+  "x-spws-release": "0.1.0-dev.2"
+}

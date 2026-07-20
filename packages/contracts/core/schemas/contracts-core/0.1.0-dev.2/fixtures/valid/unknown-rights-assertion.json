@@ -1,0 +1,17 @@
+{
+  "assertion_id": "019f6fca-9df7-75c0-a30a-201d84d53ef4",
+  "assertion_type": "spws.rights.unknown",
+  "effective_window": {},
+  "evidence": [],
+  "issuer": {
+    "agent_id": "019f6fca-9df7-75c0-a30a-1f7469b2a183",
+    "agent_type": "person",
+    "display_name": "Alexander Einoder",
+    "external_identifiers": []
+  },
+  "review_state": "unreviewed",
+  "target": {
+    "external_identifiers": [],
+    "object_id": "019f6fca-9df7-75c0-a30a-1f99b8101138"
+  }
+}

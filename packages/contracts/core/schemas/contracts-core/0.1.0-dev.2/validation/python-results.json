@@ -1,0 +1,223 @@
+{
+  "canonical_cases": [
+    {
+      "id": "ordered-object",
+      "matched": true
+    },
+    {
+      "id": "unicode",
+      "matched": true
+    },
+    {
+      "id": "array",
+      "matched": true
+    },
+    {
+      "id": "nested",
+      "matched": true
+    }
+  ],
+  "failures": [],
+  "fixture_count": 21,
+  "fixtures": [
+    {
+      "id": "minimal-envelope",
+      "matched_expectation": true,
+      "model": "core-object-envelope",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "complete-envelope",
+      "matched_expectation": true,
+      "model": "core-object-envelope",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "qualified-present",
+      "matched_expectation": true,
+      "model": "qualified-value",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "qualified-ambiguous",
+      "matched_expectation": true,
+      "model": "qualified-value",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "qualified-unavailable",
+      "matched_expectation": true,
+      "model": "qualified-value",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "qualified-withheld",
+      "matched_expectation": true,
+      "model": "qualified-value",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "qualified-failed",
+      "matched_expectation": true,
+      "model": "qualified-value",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "invalid-identity",
+      "matched_expectation": true,
+      "model": "object-reference",
+      "python_error": "1 validation error for ObjectReference\nobject_id\n  Input should be a valid UUID, invalid character: found `n` at 1 [type=uuid_parsing, input_value='not-a-uuid', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/uuid_parsing",
+      "python_valid": false,
+      "schema_errors": [
+        "'not-a-uuid' does not match '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'",
+        "'not-a-uuid' is not a 'uuid'"
+      ],
+      "schema_valid": false
+    },
+    {
+      "id": "invalid-digest",
+      "matched_expectation": true,
+      "model": "digest-record",
+      "python_error": "2 validation errors for DigestRecord\nverified\n  Extra inputs are not permitted [type=extra_forbidden, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden\nvalue\n  String should match pattern '^[0-9a-f]{64}$' [type=string_pattern_mismatch, input_value='bad', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_pattern_mismatch",
+      "python_valid": false,
+      "schema_errors": [
+        "'bad' does not match '^[0-9a-f]{64}$'",
+        "Additional properties are not allowed ('verified' was unexpected)"
+      ],
+      "schema_valid": false
+    },
+    {
+      "id": "invalid-parent-self-cycle",
+      "matched_expectation": true,
+      "model": "core-object-envelope",
+      "python_error": "1 validation error for CoreObjectEnvelope\n  Value error, version cannot be its own parent [type=value_error, input_value={'created_at': '2026-07-1...5c45b2', 'warnings': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "python_valid": false,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "invalid-policy-local-only-permit",
+      "matched_expectation": true,
+      "model": "direct-policy-summary",
+      "python_error": "1 validation error for DirectPolicySummary\n  Value error, policy summary permits transmission forbidden by privacy policy [type=value_error, input_value={'decisions': [{'allowed'...s': 'project_lifetime'}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "python_valid": false,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "invalid-provenance-self-relation",
+      "matched_expectation": true,
+      "model": "provenance-relation",
+      "python_error": "1 validation error for ProvenanceRelation\n  Value error, provenance relation cannot point a version to itself [type=value_error, input_value={'object': {'object_id': ..., 'target_span_ids': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
+      "python_valid": false,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "unicode-emoji-span",
+      "matched_expectation": true,
+      "model": "text-span",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "unicode-combining-span",
+      "matched_expectation": true,
+      "model": "text-span",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "crlf-span-mapping",
+      "matched_expectation": true,
+      "model": "span-mapping",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "repeated-quote-span",
+      "matched_expectation": true,
+      "model": "text-span",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "unknown-rights-assertion",
+      "matched_expectation": true,
+      "model": "rights-assertion",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "external-transmission-denial",
+      "matched_expectation": true,
+      "model": "policy-decision",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "mixed-source-contribution",
+      "matched_expectation": true,
+      "model": "contribution-record",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "content-free-tombstone",
+      "matched_expectation": true,
+      "model": "core-object-envelope",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "id": "critical-extension",
+      "matched_expectation": true,
+      "model": "extension-record",
+      "python_error": null,
+      "python_valid": true,
+      "schema_errors": [],
+      "schema_valid": true
+    }
+  ],
+  "ok": true,
+  "release": "0.1.0-dev.2",
+  "schema_count": 41,
+  "schema_definition_errors": []
+}

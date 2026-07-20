@@ -1,0 +1,57 @@
+{
+  "report_version": "1.0.0",
+  "programme": "Core Object Contract Phase 5.5 Assurance",
+  "recorded_at": "2026-07-18",
+  "source_pull_request": 43,
+  "source_head_sha": "084b9ed2916dee7e78e03b764c80b7e213363e85",
+  "merge_sha": "27915708f7f53e12ffb9ab1404b27442d9fb61ea",
+  "baseline_release": "0.1.0-dev.2",
+  "automated_assurance": {
+    "workflow": "Assure Core Object Contract",
+    "workflow_run_id": 29624657943,
+    "conclusion": "success",
+    "governance_and_immutable_baseline": true,
+    "reproducible_release_and_coverage": true,
+    "python": {
+      "tests_per_matrix_cell": 77,
+      "versions": [
+        "3.12",
+        "3.13",
+        "3.14"
+      ],
+      "operating_systems": [
+        "ubuntu-24.04",
+        "macos-15",
+        "windows-2025"
+      ],
+      "matrix_cells": 9,
+      "all_passed": true,
+      "wheel_and_sdist_builds": true
+    },
+    "node": {
+      "versions": [
+        "20",
+        "22",
+        "24"
+      ],
+      "schema_fixture_canonical_and_type_validation": true,
+      "all_passed": true
+    }
+  },
+  "supporting_checks": {
+    "phase5_validation_workflow_run_id": 29624657983,
+    "phase5_validation_passed": true,
+    "pkl_public_graph_workflow_run_id": 29624657945,
+    "pkl_public_graph_passed": true
+  },
+  "portability_defects_found_and_corrected": [
+    "Windows locale-dependent text decoding in release tests",
+    "Windows CRLF checkout conversion changing digest-addressed release text bytes"
+  ],
+  "limits": [
+    "This report satisfies the supported runtime and operating-system matrix gate only.",
+    "It does not approve the normative specification, ADRs, threat model or compatibility policy.",
+    "It does not satisfy property, mutation, fuzz, licensing, independent review, dedicated repository, publication, SBOM, provenance or signing gates.",
+    "Phase 6 entry and stable promotion remain blocked."
+  ]
+}

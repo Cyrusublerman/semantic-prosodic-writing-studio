@@ -137,29 +137,75 @@ class ConstraintModel:
         # Meter constraint
         if 'meter' in target_spec:
             meter_engine = MeterEngine()
-            analysis = meter_engine.analyze_line(line, target_spec['meter'])
-
-            meter_score = 1.0 - analysis.stress_deviation
+            analysis = meter_engine.analyze_line(
+                line,
+                target_spec['meter'],
+                target_syllables=target_spec.get('target_syllables'),
+            )
+            if target_spec['meter'] == 'syllabic' or str(target_spec['meter']).startswith('syllabic'):
+                meter_score = 1.0 if analysis.is_valid else max(
+                    0.0, 1.0 - analysis.syllable_deviation / 3.0
+                )
+            else:
+                meter_score = 1.0 - analysis.stress_deviation
             constraints['meter'] = self.create_constraint('meter', meter_score)
 
-        # Rhyme constraint (if applicable)
+        # Rhyme constraint (identical lemma rhyme is never acceptable)
         if 'rhyme_word' in target_spec and target_spec['rhyme_word']:
             sound_engine = SoundEngine()
             words = line.split()
 
             if words:
                 last_word = words[-1].strip('.,!?;:')
-                match = sound_engine.check_rhyme(target_spec['rhyme_word'], last_word)
-
-                rhyme_score = match.similarity if match else 0.0
+                if last_word.lower() == target_spec['rhyme_word'].lower():
+                    rhyme_score = 0.0
+                else:
+                    match = sound_engine.check_rhyme(target_spec['rhyme_word'], last_word)
+                    rhyme_score = match.similarity if match else 0.0
                 constraints['rhyme'] = self.create_constraint('rhyme', rhyme_score)
 
-        # Semantic constraint (placeholder)
-        # In full implementation, would check semantic coherence
-        constraints['semantics'] = self.create_constraint('semantics', 0.8)
+        # Semantic / affect via meaning tags when available
+        semantic_score = 0.75
+        affect_score = 0.7
+        coherence_score = 0.7
+        style_score = 0.7
+        words = [w.lower().strip(".,!?;:") for w in line.split()]
+        if words:
+            # Coherence proxy: type-token ratio (higher diversity → higher until motif)
+            uniq = len(set(words))
+            coherence_score = min(1.0, 0.4 + 0.6 * (uniq / len(words)))
+            # Style: penalize doubled determiners / repeated adjacent tokens
+            dets = {"the", "a", "an"}
+            doubled = sum(
+                1
+                for i in range(len(words) - 1)
+                if words[i] in dets and words[i + 1] in dets
+            )
+            adj_rep = sum(1 for i in range(len(words) - 1) if words[i] == words[i + 1])
+            style_score = max(0.0, 1.0 - 0.25 * doubled - 0.2 * adj_rep)
+        constraints["coherence"] = self.create_constraint("coherence", coherence_score)
+        constraints["style"] = self.create_constraint("style", style_score)
 
-        # Affect constraint (placeholder)
-        constraints['affect'] = self.create_constraint('affect', 0.7)
+        palette = target_spec.get("semantic_palette") or target_spec.get("theme_tags") or []
+        affect_targets = target_spec.get("affect_tags") or []
+        try:
+            from spws_semantics.encode import TaggingService
+
+            tags = TaggingService().rule_tags(line)
+            if palette:
+                overlap = set(palette) & set(tags.get("theme_tags", []) + tags.get("domain_tags", []))
+                semantic_score = min(1.0, 0.5 + 0.5 * (len(overlap) / max(1, len(set(palette)))))
+            else:
+                semantic_score = 0.6 + 0.1 * min(3, len(tags.get("theme_tags", [])))
+            if affect_targets:
+                a_overlap = set(affect_targets) & set(tags.get("affect_tags", []))
+                affect_score = min(1.0, 0.5 + 0.5 * (len(a_overlap) / max(1, len(set(affect_targets)))))
+            else:
+                affect_score = 0.6 + 0.1 * min(3, len(tags.get("affect_tags", [])))
+        except Exception:
+            pass
+        constraints['semantics'] = self.create_constraint('semantics', semantic_score)
+        constraints['affect'] = self.create_constraint('affect', affect_score)
 
         return constraints
 

@@ -1,0 +1,49 @@
+id: local_revision_v0
+version: "0.1.0"
+purpose: "Local offline revision loop over a working draft without remote PKL promotion."
+accepted_inputs:
+  - InputPackage
+produced_outputs:
+  - RevisionCandidateSet
+  - RevisionDecision
+required_contract_versions:
+  InputPackage: "0.1.0"
+human_gates:
+  - accept_local_edits
+failure_policy: fail_fast
+caching_policy: none
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: load_local_draft
+    component_id: ingestion.load_draft
+    inputs:
+      package: input_package
+    outputs:
+      draft: draft_text
+      source: raw_source
+  - step_id: analyse_local
+    component_id: analysis.poetry_suite
+    inputs:
+      source: raw_source
+    outputs:
+      analysis: poetry_analysis
+  - step_id: propose_local_edits
+    component_id: revision.generate_candidates
+    inputs:
+      source: raw_source
+      analysis: poetry_analysis
+    outputs:
+      candidates: revision_candidates
+  - step_id: accept_local_edits
+    component_id: revision.record_decision
+    inputs:
+      candidates: revision_candidates
+    outputs:
+      decision: revision_decision
+  - step_id: apply_local_edits
+    component_id: revision.apply_decision
+    inputs:
+      source: raw_source
+      decision: revision_decision
+    outputs:
+      revised: revised_text

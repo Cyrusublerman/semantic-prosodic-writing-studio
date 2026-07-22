@@ -1,0 +1,45 @@
+id: poetry_revision_v0
+version: "0.1.0"
+purpose: "Ingest a poetry draft, analyse, plan, propose revision candidates (human decide external)."
+accepted_inputs:
+  - InputPackage
+  - RawSource
+produced_outputs:
+  - AnalysisBundle
+  - WorkPlan
+  - CandidateSet
+required_contract_versions:
+  InputPackage: "0.1.0"
+  RawSource: "0.1.0"
+human_gates:
+  - plan_confirm
+  - revision_decide
+failure_policy: fail_fast
+caching_policy: none
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: analyse_poetry
+    component_id: analyse_document
+    inputs:
+      text: draft_text
+    outputs:
+      analysis: poetry_analysis
+      diagnosis: diagnosis
+  - step_id: create_plan
+    component_id: create_work_plan
+    inputs:
+      diagnosis: diagnosis
+      brief: brief
+    outputs:
+      work_plan: work_plan
+  - step_id: propose_revisions
+    component_id: revise_poetry
+    human_gate: plan_confirm
+    pause_after_gate: revision_decide
+    inputs:
+      text: draft_text
+      diagnosis: diagnosis
+      work_plan: work_plan
+    outputs:
+      candidates: revision_candidates
+      revision: revision

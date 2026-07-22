@@ -1,0 +1,332 @@
+{
+  "$defs": {
+    "CanonicalisationMethod": {
+      "enum": [
+        "none",
+        "unicode_profile",
+        "rfc8785_jcs",
+        "domain_projection"
+      ],
+      "title": "CanonicalisationMethod",
+      "type": "string"
+    },
+    "CanonicalisationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/CanonicalisationMethod"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "CanonicalisationRecord",
+      "type": "object"
+    },
+    "DigestAlgorithm": {
+      "enum": [
+        "sha-256"
+      ],
+      "title": "DigestAlgorithm",
+      "type": "string"
+    },
+    "DigestBasis": {
+      "enum": [
+        "raw_bytes",
+        "utf8_text",
+        "jcs_json",
+        "record_projection"
+      ],
+      "title": "DigestBasis",
+      "type": "string"
+    },
+    "DigestRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "$ref": "#/$defs/DigestAlgorithm",
+          "default": "sha-256"
+        },
+        "value": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Value",
+          "type": "string"
+        },
+        "basis": {
+          "$ref": "#/$defs/DigestBasis"
+        },
+        "byte_length": {
+          "minimum": 0,
+          "title": "Byte Length",
+          "type": "integer"
+        },
+        "media_type": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Type"
+        },
+        "character_encoding": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Character Encoding"
+        },
+        "canonicalisation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanonicalisationRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "verification_state": {
+          "$ref": "#/$defs/VerificationState",
+          "default": "unverified"
+        }
+      },
+      "required": [
+        "value",
+        "basis",
+        "byte_length"
+      ],
+      "title": "DigestRecord",
+      "type": "object"
+    },
+    "MeaningScale": {
+      "enum": [
+        "word",
+        "sense",
+        "phrase",
+        "sentence",
+        "paragraph",
+        "fragment_chunk"
+      ],
+      "title": "MeaningScale",
+      "type": "string"
+    },
+    "PrivacyState": {
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private",
+        "unknown"
+      ],
+      "title": "PrivacyState",
+      "type": "string"
+    },
+    "RightsState": {
+      "enum": [
+        "public",
+        "internal",
+        "restricted",
+        "private",
+        "unknown"
+      ],
+      "title": "RightsState",
+      "type": "string"
+    },
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    },
+    "VerificationState": {
+      "enum": [
+        "unverified",
+        "verified",
+        "mismatch"
+      ],
+      "title": "VerificationState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "unit_id": {
+      "title": "Unit Id",
+      "type": "string"
+    },
+    "scale": {
+      "$ref": "#/$defs/MeaningScale"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "span": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextSpan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "source_object_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Object Id"
+    },
+    "parent_unit_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Unit Id"
+    },
+    "content_digest": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DigestRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rights": {
+      "$ref": "#/$defs/RightsState",
+      "default": "unknown"
+    },
+    "privacy": {
+      "$ref": "#/$defs/PrivacyState",
+      "default": "unknown"
+    },
+    "object_uid": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Object Uid"
+    },
+    "commit_sha": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit Sha"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "unit_id",
+    "scale",
+    "text"
+  ],
+  "title": "MeaningUnit",
+  "type": "object"
+}

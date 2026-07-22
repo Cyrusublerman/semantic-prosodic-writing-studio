@@ -1,0 +1,42 @@
+id: source_ingestion_v0
+version: "0.1.0"
+purpose: "Capture external text, normalize encoding, persist an immutable RawSource, and stamp provenance."
+accepted_inputs:
+  - InputPackage
+produced_outputs:
+  - RawSource
+  - ProvenanceStamp
+required_contract_versions:
+  InputPackage: "0.1.0"
+  RawSource: "0.1.0"
+human_gates: []
+failure_policy: fail_fast
+caching_policy: none
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: capture_input
+    component_id: ingestion.capture_input
+    inputs:
+      path: source_path
+      text: source_text
+    outputs:
+      package: input_package
+  - step_id: normalize_text
+    component_id: ingestion.normalize_text
+    inputs:
+      package: input_package
+    outputs:
+      package: input_package
+  - step_id: store_raw_source
+    component_id: storage.persist_raw_source
+    inputs:
+      package: input_package
+    outputs:
+      source: raw_source
+  - step_id: stamp_provenance
+    component_id: storage.stamp_provenance
+    inputs:
+      source: raw_source
+    outputs:
+      provenance: provenance_stamp
+      source: raw_source

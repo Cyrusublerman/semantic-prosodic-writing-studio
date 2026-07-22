@@ -36,6 +36,15 @@ class FormSpec:
     special_rules: Dict
     device_profile_defaults: Dict
 
+    def get_rhyme_map(self) -> Optional[Dict]:
+        return (self.special_rules or {}).get("rhyme_map")
+
+    def get_rhyme_span(self) -> Optional[Dict]:
+        return (self.special_rules or {}).get("rhyme_span")
+
+    def get_rhyme_spans(self) -> Optional[List]:
+        return (self.special_rules or {}).get("rhyme_spans")
+
     def get_line_rhyme_symbol(self, line_number: int) -> Optional[str]:
         """
         Get rhyme symbol for a specific line (1-indexed).

@@ -1,0 +1,63 @@
+"""Versioned adapter boundary over WordRare."""
+
+from .capabilities import (
+    ConstrainedSearchCapability,
+    DisabledCapability,
+    FormScaffoldCapability,
+    LexicalCapability,
+    ProsodicRepairCapability,
+    ProsodyCapability,
+    is_unsupported,
+    unsupported,
+)
+from .facade import (
+    ADAPTER_VERSION,
+    WordRareAdapter,
+    constrained_search,
+    diagnose_line,
+    form_scaffold,
+    generate_poem,
+    get_adapter,
+    lexical_record,
+    lexical_snapshot,
+    list_forms,
+    pronunciation,
+    rare_reword_line,
+    rare_reword_paragraph,
+    rarity,
+    repair_line,
+    similar_lemmas,
+    syllable_stress_rhyme,
+    wordrare_version,
+)
+
+__all__ = [
+    "ADAPTER_VERSION",
+    "ConstrainedSearchCapability",
+    "DisabledCapability",
+    "FormScaffoldCapability",
+    "LexicalCapability",
+    "ProsodicRepairCapability",
+    "ProsodyCapability",
+    "WordRareAdapter",
+    "constrained_search",
+    "diagnose_line",
+    "form_scaffold",
+    "generate_poem",
+    "get_adapter",
+    "is_unsupported",
+    "lexical_record",
+    "lexical_snapshot",
+    "list_forms",
+    "pronunciation",
+    "rare_reword_line",
+    "rare_reword_paragraph",
+    "rarity",
+    "repair_line",
+    "similar_lemmas",
+    "syllable_stress_rhyme",
+    "unsupported",
+    "wordrare_version",
+]
+
+__version__ = ADAPTER_VERSION

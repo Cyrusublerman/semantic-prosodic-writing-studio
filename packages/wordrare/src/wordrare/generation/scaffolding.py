@@ -8,6 +8,8 @@ from dataclasses import dataclass, field
 
 from ..forms import FormLibrary, FormSpec, StanzaSpec
 from ..forms import GrammarEngine, SyntacticTemplate
+from ..forms.grammar_engine import mono_chain_template
+from ..forms.rhyme_plan import RhymePlan, compile_rhyme_plan
 from .generation_spec import GenerationSpec
 
 logger = logging.getLogger(__name__)
@@ -24,6 +26,8 @@ class LineScaffold:
     syntactic_template: Optional[SyntacticTemplate] = None
     is_refrain: bool = False
     refrain_text: Optional[str] = None  # For villanelle refrains
+    rhyme_code: Optional[str] = None
+    rhyme_slots: list = field(default_factory=list)
 
 
 @dataclass
@@ -42,6 +46,7 @@ class PoemScaffold:
     form: FormSpec
     stanzas: List[StanzaScaffold] = field(default_factory=list)
     rhyme_groups: Dict[str, List[int]] = field(default_factory=dict)  # symbol -> line numbers
+    rhyme_plan: Optional[RhymePlan] = None
 
     def get_line(self, line_number: int) -> Optional[LineScaffold]:
         """Get line by number (1-indexed)."""
@@ -115,9 +120,47 @@ class Scaffolder:
         # Handle refrains (for villanelle)
         self._apply_refrains(scaffold, form)
 
+        # Compile RhymePlan (spec overrides > form special_rules)
+        self._attach_rhyme_plan(scaffold, form, spec)
+
         logger.info(f"Built scaffold with {scaffold.get_total_lines()} lines")
 
         return scaffold
+
+    def _attach_rhyme_plan(
+        self, scaffold: PoemScaffold, form: FormSpec, spec: GenerationSpec
+    ) -> None:
+        lines: List[LineScaffold] = []
+        for stanza in scaffold.stanzas:
+            lines.extend(stanza.lines)
+        symbols = [ln.rhyme_symbol for ln in lines]
+        targets = [ln.target_syllables for ln in lines]
+
+        rhyme_spans = spec.rhyme_spans or form.get_rhyme_spans()
+        rhyme_map = spec.rhyme_map or form.get_rhyme_map()
+        rhyme_span = spec.rhyme_span or form.get_rhyme_span()
+
+        try:
+            plan = compile_rhyme_plan(
+                line_symbols=symbols,
+                line_targets=targets,
+                rhyme_span=rhyme_span,
+                rhyme_map=rhyme_map,
+                rhyme_spans=rhyme_spans,
+                match_mode=spec.rhyme_match_mode,
+                coalesce_runs=spec.rhyme_coalesce_runs,
+            )
+        except ValueError as e:
+            logger.error("Rhyme plan compile failed: %s", e)
+            plan = RhymePlan()
+
+        scaffold.rhyme_plan = plan
+        for ln in lines:
+            ln.rhyme_code = plan.line_codes.get(ln.line_number)
+            ln.rhyme_slots = plan.slots_for_line(ln.line_number)
+            # Dense per-syllable maps need one slot per syllable
+            if ln.rhyme_slots and len(ln.rhyme_slots) >= ln.target_syllables:
+                ln.syntactic_template = mono_chain_template(ln.target_syllables)
 
     def _build_stanza_scaffold(self, stanza_spec: StanzaSpec,
                                start_line_number: int,
@@ -137,10 +180,11 @@ class Scaffolder:
                 i
             )
 
-            # Select syntactic template
-            template = self.grammar_engine.get_random_template(
-                category='line',
-                syllable_target=target_syllables
+            # Prefer content-ending templates when the line participates in rhyme
+            template = self._select_template(
+                target_syllables=target_syllables,
+                rhyme_symbol=rhyme_symbol,
+                meter_pattern=stanza_spec.meter_pattern,
             )
 
             line = LineScaffold(
@@ -155,6 +199,63 @@ class Scaffolder:
             stanza.lines.append(line)
 
         return stanza
+
+    def _select_template(
+        self,
+        target_syllables: int,
+        rhyme_symbol: Optional[str],
+        meter_pattern: str = "",
+    ):
+        """Pick a syntactic template; syllabic forms use short 5/7 templates."""
+        import random
+
+        if meter_pattern == "syllabic" or str(meter_pattern).startswith("syllabic"):
+            if target_syllables <= 5:
+                ids = [
+                    "syl_5_art_adj_noun",
+                    "syl_5_prep_art_adj_noun",
+                    "syl_5_art_noun_verb",
+                    "line_adj_noun",
+                ]
+            else:
+                ids = [
+                    "syl_7_art_noun_verb_art_noun",
+                    "syl_7_prep_art_adj_noun",
+                    "syl_7_art_adj_noun_verb_noun",
+                    "line_np_verb_noun",
+                ]
+            pool = [self.grammar_engine.get_template(t) for t in ids]
+            pool = [t for t in pool if t]
+            if pool:
+                return random.choice(pool)
+
+        rhyme_templates = [
+            'line_np_verb_noun',
+            'line_svo_end_noun',
+            'line_adj_noun',
+            'line_prep_adj_noun',
+            'line_svo_pp',
+        ]
+        if rhyme_symbol and rhyme_symbol != 'null':
+            candidates = []
+            for tid in rhyme_templates:
+                template = self.grammar_engine.get_template(tid)
+                if not template:
+                    continue
+                approx = len(template.pattern) * 2
+                if abs(approx - target_syllables) <= 4:
+                    candidates.append(template)
+            if candidates:
+                return random.choice(candidates)
+            for tid in rhyme_templates:
+                template = self.grammar_engine.get_template(tid)
+                if template:
+                    return template
+
+        return self.grammar_engine.get_random_template(
+            category='line',
+            syllable_target=target_syllables,
+        )
 
     def _get_target_syllables(self, meter_pattern: str,
                               form: FormSpec, line_index: int) -> int:

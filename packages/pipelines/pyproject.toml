@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-pipelines"
+version = "0.1.0"
+description = "SPWS bundled pipeline definitions and loader"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-orchestration",
+  "pyyaml>=6.0",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -3,7 +3,7 @@ Generation engine - Input specification and configuration.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,12 +27,20 @@ class GenerationSpec:
 
     # Semantic constraints
     domain_tags: List[str] = field(default_factory=list)  # e.g., ["nautical", "botanical"]
+    imagery_tags: List[str] = field(default_factory=list)  # e.g., ["visual", "tactile"]
     imagery_tags: List[str] = field(default_factory=list)  # e.g., ["visual", "auditory"]
 
     # Device configuration
     device_profile: Dict[str, float] = field(default_factory=dict)
     cross_domain: bool = False  # Allow metaphor bridges across domains
     motif_density: float = 0.3  # How much to repeat motifs
+
+    # Rhyme plan overrides (optional; form special_rules used if unset)
+    rhyme_map: Optional[Dict[str, Any]] = None
+    rhyme_span: Optional[Dict[str, Any]] = None
+    rhyme_spans: Optional[List[Dict[str, Any]]] = None
+    rhyme_match_mode: Optional[str] = None  # perfect | slant | assonance
+    rhyme_coalesce_runs: Optional[bool] = None
 
     # Constraint weights
     constraint_weights: Dict[str, float] = field(default_factory=lambda: {
@@ -47,6 +55,9 @@ class GenerationSpec:
     # Generation parameters
     max_iterations: int = 10  # Max repair iterations per line
     temperature: float = 0.7  # Randomness in word selection (0.0-1.0)
+    steering_policy: str = "loose_tercet"  # strict_sonnet | loose_tercet | free_verse
+    optimize_attempts: int = 1  # >1 enables multi-candidate search for best total score
+    min_foot_accuracy: float = 0.55  # strict stress gate threshold
 
     # Output options
     include_annotations: bool = False
@@ -103,6 +114,14 @@ class GenerationSpec:
             'constraint_weights': self.constraint_weights,
             'max_iterations': self.max_iterations,
             'temperature': self.temperature,
+            'steering_policy': self.steering_policy,
+            'optimize_attempts': self.optimize_attempts,
+            'min_foot_accuracy': self.min_foot_accuracy,
+            'rhyme_map': self.rhyme_map,
+            'rhyme_span': self.rhyme_span,
+            'rhyme_spans': self.rhyme_spans,
+            'rhyme_match_mode': self.rhyme_match_mode,
+            'rhyme_coalesce_runs': self.rhyme_coalesce_runs,
             'include_annotations': self.include_annotations,
             'debug_mode': self.debug_mode
         }
@@ -122,7 +141,8 @@ class GenerationSpec:
             rarity_bias=0.6,
             domain_tags=['botanical'],
             imagery_tags=['visual'],
-            motif_density=0.4
+            motif_density=0.4,
+            steering_policy='strict_sonnet',
         )
 
     @classmethod
@@ -135,7 +155,8 @@ class GenerationSpec:
             rarity_bias=0.2,  # Use more common words
             min_rarity=0.0,
             max_rarity=0.5,
-            imagery_tags=['visual', 'auditory']
+            imagery_tags=['visual', 'auditory'],
+            steering_policy='free_verse',
         )
 
     @classmethod
@@ -148,7 +169,8 @@ class GenerationSpec:
             rarity_bias=0.8,
             min_rarity=0.6,
             cross_domain=True,
-            motif_density=0.5
+            motif_density=0.5,
+            steering_policy='loose_tercet',
         )
 
 

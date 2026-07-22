@@ -12,6 +12,15 @@ else:
 
 
 @dataclass(frozen=True)
+class EmbeddingConfig:
+    enabled: bool
+    model_id: str
+    model_version: str
+    require_lexical_gate: bool
+    debug_hash_embeddings: bool = False
+
+
+@dataclass(frozen=True)
 class SpwsConfig:
     repository_path: Path
     read_mode: str
@@ -29,6 +38,7 @@ class SpwsConfig:
     fail_closed_on_unknown_privacy: bool
     allow_working_tree_reads: bool
     allow_remote_git: bool
+    embeddings: EmbeddingConfig
 
     @property
     def sqlite_path(self) -> Path:
@@ -41,6 +51,10 @@ class SpwsConfig:
     @property
     def decisions_path(self) -> Path:
         return self.workspace_path / "decisions"
+
+    @property
+    def meaning_index_path(self) -> Path:
+        return self.pkl_cache_path / "meaning"
 
 
 def _expand(path_text: str) -> Path:
@@ -65,6 +79,7 @@ def load_config(config_path: Path | None = None) -> SpwsConfig:
     runtime = data["runtime"]
     wordrare = data["wordrare"]
     policy = data["policy"]
+    embeddings_raw = data.get("embeddings", {})
     return SpwsConfig(
         repository_path=_resolve_repo_path(path.parent, pkl["repository_path"]),
         read_mode=pkl["read_mode"],
@@ -82,4 +97,11 @@ def load_config(config_path: Path | None = None) -> SpwsConfig:
         fail_closed_on_unknown_privacy=policy["fail_closed_on_unknown_privacy"],
         allow_working_tree_reads=policy["allow_working_tree_reads"],
         allow_remote_git=policy["allow_remote_git"],
+        embeddings=EmbeddingConfig(
+            enabled=bool(embeddings_raw.get("enabled", False)),
+            model_id=str(embeddings_raw.get("model_id", "sentence-transformers/all-MiniLM-L6-v2")),
+            model_version=str(embeddings_raw.get("model_version", "unspecified")),
+            require_lexical_gate=bool(embeddings_raw.get("require_lexical_gate", True)),
+            debug_hash_embeddings=bool(embeddings_raw.get("debug_hash_embeddings", False)),
+        ),
     )

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-wordrare-adapter"
+version = "0.1.0"
+description = "SPWS adapter boundary for WordRare lexicon and generation"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-contracts-core",
+  "wordrare",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

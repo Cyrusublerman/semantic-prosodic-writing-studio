@@ -1,0 +1,175 @@
+{
+  "$defs": {
+    "MeaningScale": {
+      "enum": [
+        "word",
+        "sense",
+        "phrase",
+        "sentence",
+        "paragraph",
+        "fragment_chunk"
+      ],
+      "title": "MeaningScale",
+      "type": "string"
+    },
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "unit_id": {
+      "title": "Unit Id",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "scale": {
+      "$ref": "#/$defs/MeaningScale"
+    },
+    "score_combined": {
+      "title": "Score Combined",
+      "type": "number"
+    },
+    "score_vector": {
+      "default": 0.0,
+      "title": "Score Vector",
+      "type": "number"
+    },
+    "score_tags": {
+      "default": 0.0,
+      "title": "Score Tags",
+      "type": "number"
+    },
+    "score_graph": {
+      "default": 0.0,
+      "title": "Score Graph",
+      "type": "number"
+    },
+    "explanation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Explanation"
+    },
+    "object_uid": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Object Uid"
+    },
+    "span": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextSpan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "theme_tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Theme Tags",
+      "type": "array"
+    },
+    "path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Path"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "unit_id",
+    "text",
+    "scale",
+    "score_combined"
+  ],
+  "title": "SimilarityHit",
+  "type": "object"
+}

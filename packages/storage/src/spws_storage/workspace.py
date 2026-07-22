@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import sqlite3
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -11,6 +11,8 @@ from .blobs import BlobStore
 from dataclasses import replace
 
 from .config import SpwsConfig, load_config
+from .db import ensure_schema
+from .manuscripts import save_revision_decision as persist_revision_decision
 
 
 def _utc_now() -> datetime:
@@ -20,30 +22,9 @@ def _utc_now() -> datetime:
 class WorkspaceStore:
     """Mutable SPWS state stored outside git repositories."""
 
-    SCHEMA = """
-    CREATE TABLE IF NOT EXISTS input_packages (
-        package_id TEXT PRIMARY KEY,
-        payload_json TEXT NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS raw_sources (
-        source_id TEXT PRIMARY KEY,
-        input_package_id TEXT NOT NULL,
-        content_digest TEXT NOT NULL,
-        storage_location TEXT NOT NULL,
-        payload_json TEXT NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS runs (
-        run_id TEXT PRIMARY KEY,
-        payload_json TEXT NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS revision_decisions (
-        decision_id TEXT PRIMARY KEY,
-        run_id TEXT NOT NULL,
-        payload_json TEXT NOT NULL
-    );
-    """
-
     def __init__(self, config: SpwsConfig | None = None, *, workspace_root: Path | None = None) -> None:
+        import sqlite3
+
         base = config or load_config()
         if workspace_root is not None:
             root = workspace_root.resolve()
@@ -56,9 +37,9 @@ class WorkspaceStore:
         self.config = base
         self._ensure_layout()
         self.blobs = BlobStore(self.config.objects_path)
+        ensure_schema(self.config.sqlite_path)
         self._conn = sqlite3.connect(self.config.sqlite_path)
         self._conn.row_factory = sqlite3.Row
-        self._conn.executescript(self.SCHEMA)
 
     def _ensure_layout(self) -> None:
         for path in (
@@ -92,6 +73,7 @@ class WorkspaceStore:
             rights=package.rights,
             privacy=package.privacy,
         )
+        payload = json.loads(source.model_dump_json())
         self._conn.execute(
             "INSERT OR REPLACE INTO input_packages (package_id, payload_json) VALUES (?, ?)",
             (package.package_id, package.model_dump_json()),
@@ -99,15 +81,17 @@ class WorkspaceStore:
         self._conn.execute(
             """
             INSERT OR REPLACE INTO raw_sources
-            (source_id, input_package_id, content_digest, storage_location, payload_json)
-            VALUES (?, ?, ?, ?, ?)
+            (source_id, input_package_id, content_digest, storage_location,
+             manuscript_id, version_id, parent_version_ids, payload_json, created_at)
+            VALUES (?, ?, ?, ?, NULL, NULL, NULL, ?, ?)
             """,
             (
                 source.source_id,
                 source.input_package_id,
                 source.content_digest.value,
                 source.storage_location,
-                source.model_dump_json(),
+                json.dumps(payload),
+                stored_at.isoformat(),
             ),
         )
         self._conn.commit()
@@ -123,18 +107,32 @@ class WorkspaceStore:
         return InputPackage.model_validate_json(row["payload_json"])
 
     def get_raw_source(self, source_id: str) -> RawSource:
+        from .tombstone import strip_tombstone_fields
+
         row = self._conn.execute(
             "SELECT payload_json FROM raw_sources WHERE source_id = ?",
             (source_id,),
         ).fetchone()
         if row is None:
             raise KeyError(source_id)
-        return RawSource.model_validate_json(row["payload_json"])
+        raw = row["payload_json"]
+        if isinstance(raw, (bytes, bytearray)):
+            raw = raw.decode("utf-8")
+        data = json.loads(raw) if isinstance(raw, str) else dict(raw)
+        if data.get("tombstoned"):
+            data = strip_tombstone_fields(data)
+            data["text"] = None
+        return RawSource.model_validate_json(json.dumps(data))
 
     def save_run(self, manifest: RunManifest) -> Path:
+        payload = json.loads(manifest.model_dump_json())
         self._conn.execute(
-            "INSERT OR REPLACE INTO runs (run_id, payload_json) VALUES (?, ?)",
-            (manifest.run_id, manifest.model_dump_json()),
+            """
+            INSERT OR REPLACE INTO runs
+            (run_id, manuscript_id, version_id, content_digest, parent_version_ids, payload_json, created_at)
+            VALUES (?, NULL, NULL, NULL, NULL, ?, ?)
+            """,
+            (manifest.run_id, json.dumps(payload), _utc_now().isoformat()),
         )
         self._conn.commit()
         path = self.config.runs_path / f"{manifest.run_id}.json"
@@ -142,16 +140,8 @@ class WorkspaceStore:
         return path
 
     def save_revision_decision(self, decision: RevisionDecision) -> Path:
-        self._conn.execute(
-            """
-            INSERT OR REPLACE INTO revision_decisions (decision_id, run_id, payload_json)
-            VALUES (?, ?, ?)
-            """,
-            (decision.decision_id, decision.run_id, decision.model_dump_json()),
-        )
-        self._conn.commit()
+        persist_revision_decision(self.config, decision)
         path = self.config.decisions_path / f"{decision.decision_id}.json"
-        path.write_text(decision.model_dump_json(indent=2), encoding="utf-8")
         return path
 
     def get_revision_decision(self, decision_id: str) -> RevisionDecision:
@@ -161,7 +151,12 @@ class WorkspaceStore:
         ).fetchone()
         if row is None:
             raise KeyError(decision_id)
-        return RevisionDecision.model_validate_json(row["payload_json"])
+        raw = row["payload_json"]
+        if isinstance(raw, (bytes, bytearray)):
+            raw = raw.decode("utf-8")
+        if isinstance(raw, str):
+            return RevisionDecision.model_validate_json(raw)
+        return RevisionDecision.model_validate(raw)
 
     def workspace_inside_repo(self, repo_root: Path) -> bool:
         try:

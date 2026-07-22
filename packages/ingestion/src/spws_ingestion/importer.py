@@ -7,7 +7,11 @@ from uuid import uuid4
 import frontmatter
 
 from spws_contracts_core import InputPackage
-from spws_contracts_core.domain import PrivacyState, RightsState
+from spws_contracts_core.domain import (
+    PrivacyState,
+    RightsState,
+    normalize_rights_ingest,
+)
 
 
 def _utc_now() -> datetime:
@@ -19,8 +23,8 @@ def import_text(
     *,
     source_label: str | None = None,
     media_type: str = "text/plain",
-    rights: RightsState = RightsState.UNKNOWN,
-    privacy: PrivacyState = PrivacyState.UNKNOWN,
+    rights: RightsState = RightsState.RESTRICTED_PENDING_REVIEW,
+    privacy: PrivacyState = PrivacyState.PRIVATE,
     user_metadata: dict | None = None,
 ) -> InputPackage:
     return InputPackage(
@@ -29,7 +33,7 @@ def import_text(
         text=text,
         source_label=source_label,
         captured_at=_utc_now(),
-        rights=rights,
+        rights=normalize_rights_ingest(rights),
         privacy=privacy,
         user_metadata=user_metadata or {},
     )
@@ -49,15 +53,21 @@ def import_markdown(path: Path) -> InputPackage:
     metadata = dict(post.metadata)
     title = metadata.get("title")
     label = title or path.name
+    rights_raw = metadata.get("rights", RightsState.RESTRICTED_PENDING_REVIEW.value)
+    privacy = _enum_value(
+        PrivacyState,
+        metadata.get("privacy", PrivacyState.PRIVATE.value),
+        PrivacyState.PRIVATE,
+    )
     return InputPackage(
         package_id=f"inp-{uuid4().hex[:12]}",
         media_type="text/markdown",
         text=body,
         source_label=str(path),
         captured_at=_utc_now(),
-        rights=_enum_value(RightsState, metadata.get("rights", RightsState.UNKNOWN.value), RightsState.UNKNOWN),
-        privacy=_enum_value(PrivacyState, metadata.get("privacy", PrivacyState.UNKNOWN.value), PrivacyState.UNKNOWN),
-        user_metadata={"frontmatter": metadata, "path": str(path)},
+        rights=normalize_rights_ingest(rights_raw),
+        privacy=privacy,
+        user_metadata={"frontmatter": metadata, "path": str(path), "title": label},
     )
 
 

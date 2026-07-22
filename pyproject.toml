@@ -12,11 +12,19 @@ license = "LicenseRef-Proprietary"
 authors = [{ name = "Alexander Einoder" }]
 dependencies = [
   "spws-contracts-core",
+  "spws-domain",
+  "spws-orchestration",
+  "spws-pipelines",
   "spws-pkl-adapter",
   "spws-storage",
   "spws-ingestion",
   "spws-analysis",
   "spws-revision",
+  "spws-semantics",
+  "spws-preprocessing",
+  "spws-planning",
+  "spws-generation",
+  "spws-wordrare-adapter",
   "spws-cli",
   "wordrare",
   "pydantic>=2.13",
@@ -56,14 +64,37 @@ wordrare = "wordrare.generation.engine:main"
 
 [tool.setuptools.packages.find]
 where = [
+  "packages/domain/src",
+  "packages/orchestration/src",
+  "packages/pipelines/src",
   "packages/storage/src",
   "packages/ingestion/src",
   "packages/analysis/src",
   "packages/revision/src",
+  "packages/semantics/src",
+  "packages/preprocessing/src",
+  "packages/planning/src",
+  "packages/generation/src",
   "packages/spws_cli/src",
   "packages/adapters/pkl/src",
+  "packages/adapters/wordrare/src",
 ]
-include = ["spws_cli*", "spws_storage*", "spws_analysis*", "spws_revision*", "spws_ingestion*", "spws_pkl_adapter*"]
+include = [
+  "spws_domain*",
+  "spws_orchestration*",
+  "spws_pipelines*",
+  "spws_cli*",
+  "spws_storage*",
+  "spws_analysis*",
+  "spws_revision*",
+  "spws_ingestion*",
+  "spws_pkl_adapter*",
+  "spws_wordrare_adapter*",
+  "spws_semantics*",
+  "spws_preprocessing*",
+  "spws_planning*",
+  "spws_generation*",
+]
 
 [tool.pytest.ini_options]
 addopts = "-q --strict-markers"
@@ -72,33 +103,52 @@ testpaths = [
   "tests/integration",
   "tests/end_to_end",
   "tests/component",
+  "tests/stress",
   "packages/contracts/core/tests",
   "packages/adapters/pkl/tests",
+  "packages/adapters/wordrare/tests",
 ]
 markers = [
   "integration: integration tests",
   "end_to_end: full vertical slice",
+  "stress: adversarial / pressure battery",
   "pinned_snapshot: requires Library checkout",
 ]
 
 [tool.uv.workspace]
 members = [
   "packages/contracts/core",
+  "packages/domain",
+  "packages/orchestration",
+  "packages/pipelines",
   "packages/adapters/pkl",
+  "packages/adapters/wordrare",
   "packages/storage",
   "packages/ingestion",
   "packages/analysis",
   "packages/revision",
+  "packages/semantics",
+  "packages/preprocessing",
+  "packages/planning",
+  "packages/generation",
   "packages/spws_cli",
   "packages/wordrare",
 ]
 
 [tool.uv.sources]
 spws-contracts-core = { workspace = true }
+spws-domain = { workspace = true }
+spws-orchestration = { workspace = true }
+spws-pipelines = { workspace = true }
 spws-pkl-adapter = { workspace = true }
+spws-wordrare-adapter = { workspace = true }
 spws-storage = { workspace = true }
 spws-ingestion = { workspace = true }
 spws-analysis = { workspace = true }
 spws-revision = { workspace = true }
+spws-semantics = { workspace = true }
+spws-preprocessing = { workspace = true }
+spws-planning = { workspace = true }
+spws-generation = { workspace = true }
 spws-cli = { workspace = true }
 wordrare = { workspace = true }

@@ -340,43 +340,69 @@ class MetricsAnalyzer:
         for line in lines:
             all_words.extend(line.split())
 
-        # Query word records
+        # Query word records and extract scalars inside the session
+        rarities = []
+        definition_counts = []
+        all_tags = []
+        embeddings = []
         with get_session() as session:
-            word_records = []
             for word in all_words:
-                record = session.query(WordRecord).filter_by(lemma=word.lower()).first()
-                if record:
-                    word_records.append(record)
+                clean = word.lower().strip('.,!?;:\'"')
+                record = session.query(WordRecord).filter_by(lemma=clean).first()
+                if not record:
+                    continue
+                rarities.append(record.rarity_score if record.rarity_score is not None else 0.5)
+                definition_counts.append(len(record.definitions or []))
+                if record.domain_tags:
+                    all_tags.extend(record.domain_tags)
+                if record.embedding:
+                    embeddings.append(record.embedding)
 
-        if not word_records:
+        if not rarities:
             return metrics
 
         # Compute depth (rarity × complexity)
-        avg_rarity = np.mean([r.rarity_score or 0.5 for r in word_records])
-        avg_definitions = np.mean([len(r.definitions or []) for r in word_records])
+        avg_rarity = np.mean(rarities)
+        avg_definitions = np.mean(definition_counts) if definition_counts else 0.0
 
-        metrics.depth = avg_rarity * min(1.0, avg_definitions / 3.0)
+        metrics.depth = float(avg_rarity * min(1.0, avg_definitions / 3.0))
 
         # Theme coherence (variance of domain tags)
-        all_tags = []
-        for record in word_records:
-            if record.domain_tags:
-                all_tags.extend(record.domain_tags)
-
         if all_tags:
-            # Compute tag diversity (lower = more coherent)
             unique_tags = len(set(all_tags))
             total_tags = len(all_tags)
             diversity = unique_tags / total_tags if total_tags > 0 else 1
-
             metrics.theme_coherence = 1.0 - diversity
         else:
             metrics.theme_coherence = 0.5
 
-        # Motif coherence (placeholder - would use embeddings)
-        metrics.motif_coherence = 0.7
+        metrics.motif_coherence = self._motif_coherence_from_embeddings(embeddings)
 
         return metrics
+
+    def _motif_coherence_from_embeddings(self, embeddings: List) -> float:
+        """Mean pairwise cosine similarity of available lemma embeddings."""
+        if not embeddings or len(embeddings) < 2:
+            return 0.5
+        try:
+            import math
+
+            def cosine(a, b):
+                if not a or not b or len(a) != len(b):
+                    return 0.0
+                dot = sum(x * y for x, y in zip(a, b))
+                na = math.sqrt(sum(x * x for x in a)) or 1.0
+                nb = math.sqrt(sum(y * y for y in b)) or 1.0
+                return dot / (na * nb)
+
+            sample = embeddings[:12]
+            scores = []
+            for i in range(len(sample)):
+                for j in range(i + 1, len(sample)):
+                    scores.append(cosine(sample[i], sample[j]))
+            return float(sum(scores) / len(scores)) if scores else 0.5
+        except Exception:
+            return 0.5
 
     def analyze_techniques(self, lines: List[str]) -> Dict[str, TechniqueMetrics]:
         """Analyze sound device techniques."""

@@ -1,0 +1,52 @@
+id: analysis_suite_v0
+version: "0.1.0"
+purpose: "Run the full analysis suite over a retained source: prosody, semantics, and aggregated report."
+accepted_inputs:
+  - RawSource
+produced_outputs:
+  - ProsodyAnalysis
+  - SemanticAnalysis
+  - AnalysisReport
+required_contract_versions:
+  RawSource: "0.1.0"
+human_gates: []
+failure_policy: fail_fast
+caching_policy: step
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: load_source
+    component_id: storage.load_raw_source
+    inputs:
+      source_id: source_id
+    outputs:
+      source: raw_source
+  - step_id: analyse_prosody
+    component_id: analysis.prosody
+    inputs:
+      source: raw_source
+    outputs:
+      prosody: prosody_analysis
+  - step_id: analyse_semantics
+    component_id: analysis.semantics
+    inputs:
+      source: raw_source
+    outputs:
+      semantics: semantic_analysis
+  - step_id: analyse_poetry
+    component_id: analysis.poetry_suite
+    inputs:
+      source: raw_source
+      prosody: prosody_analysis
+      semantics: semantic_analysis
+    outputs:
+      poetry: poetry_analysis
+    optional: true
+  - step_id: aggregate_report
+    component_id: analysis.aggregate_report
+    inputs:
+      source: raw_source
+      prosody: prosody_analysis
+      semantics: semantic_analysis
+      poetry: poetry_analysis
+    outputs:
+      report: analysis_report

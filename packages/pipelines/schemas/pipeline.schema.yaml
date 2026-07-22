@@ -1,0 +1,65 @@
+# SPWS PipelineDefinition schema (documentation schema)
+#
+# Required top-level keys:
+#   id                      string   stable pipeline family id
+#   version                 string   semver-like pipeline version
+#   purpose                 string   human-readable intent
+#   steps                   list     ordered PipelineStep entries (min 1)
+#
+# Optional top-level keys:
+#   accepted_inputs         list[str]   contract/input names consumed
+#   produced_outputs        list[str]   contract/output names emitted
+#   required_contract_versions  map[str,str]  contract_id -> version pin
+#   human_gates             list[str]   step_ids requiring human approval
+#   failure_policy          string      fail_fast | continue (default fail_fast)
+#   caching_policy          string      none | step | pipeline (default none)
+#   reproducibility_policy  string      seeded_where_supported | strict | best_effort
+#
+# Each steps[] item required keys:
+#   step_id                 string
+#   component_id            string   registry component placeholder or concrete id
+#
+# Each steps[] item optional keys:
+#   inputs                  map[str,str]  handler param -> context key
+#   outputs                 map[str,str]  handler result key -> context key
+#   optional                bool          skip on failure when true (default false)
+#
+# Example minimal document:
+#   id: example_v0
+#   version: "0.1.0"
+#   purpose: "illustrative"
+#   steps:
+#     - step_id: run
+#       component_id: example.noop
+#       inputs: {}
+#       outputs: {}
+
+required:
+  - id
+  - version
+  - purpose
+  - steps
+
+properties:
+  id: { type: string }
+  version: { type: string }
+  purpose: { type: string }
+  accepted_inputs: { type: array, items: { type: string } }
+  produced_outputs: { type: array, items: { type: string } }
+  required_contract_versions: { type: object, additionalProperties: { type: string } }
+  human_gates: { type: array, items: { type: string } }
+  failure_policy: { type: string, enum: [fail_fast, continue] }
+  caching_policy: { type: string }
+  reproducibility_policy: { type: string }
+  steps:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required: [step_id, component_id]
+      properties:
+        step_id: { type: string }
+        component_id: { type: string }
+        inputs: { type: object, additionalProperties: { type: string } }
+        outputs: { type: object, additionalProperties: { type: string } }
+        optional: { type: boolean }

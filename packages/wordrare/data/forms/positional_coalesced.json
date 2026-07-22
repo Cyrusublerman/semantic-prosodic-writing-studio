@@ -1,0 +1,30 @@
+{
+  "form_id": "positional_coalesced",
+  "name": "Positional Rhyme (Coalesced)",
+  "description": "3-line syllabic form with coalesced positional rhyme map (AACABD / ABACCAB / ACCABBA)",
+  "total_lines": 3,
+  "stanza_specs": [
+    {
+      "stanza_id": 1,
+      "lines": 3,
+      "rhyme_pattern": [null, null, null],
+      "meter_pattern": "syllabic"
+    }
+  ],
+  "rhyme_pattern": "positional",
+  "meter_pattern": "syllabic",
+  "special_rules": {
+    "syllable_pattern": [6, 7, 7],
+    "rhyme_map": {
+      "unit": "syllable",
+      "null_char": "x",
+      "coalesce_runs": true,
+      "match_mode": "perfect",
+      "lines": ["AACABD", "ABACCAB", "ACCABBA"]
+    }
+  },
+  "device_profile_defaults": {
+    "enjambment_rate": 0.1,
+    "internal_rhyme_rate": 0.5
+  }
+}

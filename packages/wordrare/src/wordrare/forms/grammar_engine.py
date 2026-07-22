@@ -152,7 +152,113 @@ TEMPLATES = {
         ],
         'Descriptive subject with adverbial verb'
     ),
+
+    # Rhymed-line templates ending in content words (noun)
+    'line_adj_noun': SyntacticTemplate(
+        'line_adj_noun',
+        'Article-Adjective-Noun',
+        [POSSlot('article'), POSSlot('adjective'), POSSlot('noun')],
+        'Short descriptive NP ending in rhymeable noun'
+    ),
+
+    'line_svo_end_noun': SyntacticTemplate(
+        'line_svo_end_noun',
+        'SVO ending noun',
+        [
+            POSSlot('article'), POSSlot('adjective'), POSSlot('noun'),
+            POSSlot('verb'),
+            POSSlot('article'), POSSlot('noun'),
+        ],
+        'SVO clause with noun end for rhyme forms'
+    ),
+
+    'line_np_verb_noun': SyntacticTemplate(
+        'line_np_verb_noun',
+        'NP-Verb-Noun',
+        [
+            POSSlot('article'), POSSlot('noun'),
+            POSSlot('verb'),
+            POSSlot('noun'),
+        ],
+        'Compact line ending in rhymeable noun'
+    ),
+
+    'line_prep_adj_noun': SyntacticTemplate(
+        'line_prep_adj_noun',
+        'Prep-Article-Adjective-Noun',
+        [
+            POSSlot('preposition'), POSSlot('article'),
+            POSSlot('adjective'), POSSlot('noun'),
+        ],
+        'PP line ending in rhymeable noun'
+    ),
+
+    # Syllabic short forms (haiku 5 / 7)
+    'syl_5_prep_art_adj_noun': SyntacticTemplate(
+        'syl_5_prep_art_adj_noun',
+        'Syllabic-5 Prep Art Adj Noun',
+        [
+            POSSlot('preposition'), POSSlot('article'),
+            POSSlot('adjective'), POSSlot('noun'),
+        ],
+        'Four-slot line targeting ~5 syllables'
+    ),
+    'syl_5_art_adj_noun': SyntacticTemplate(
+        'syl_5_art_adj_noun',
+        'Syllabic-5 Art Adj Noun',
+        [POSSlot('article'), POSSlot('adjective'), POSSlot('noun')],
+        'Three-slot line targeting ~5 syllables'
+    ),
+    'syl_5_art_noun_verb': SyntacticTemplate(
+        'syl_5_art_noun_verb',
+        'Syllabic-5 Art Noun Verb',
+        [POSSlot('article'), POSSlot('noun'), POSSlot('verb')],
+        'Three-slot ~5 syllable line'
+    ),
+    'syl_7_art_adj_noun_verb_noun': SyntacticTemplate(
+        'syl_7_art_adj_noun_verb_noun',
+        'Syllabic-7 Art Adj Noun Verb Noun',
+        [
+            POSSlot('article'), POSSlot('adjective'), POSSlot('noun'),
+            POSSlot('verb'), POSSlot('noun'),
+        ],
+        'Five-slot line targeting ~7 syllables'
+    ),
+    'syl_7_prep_art_adj_noun': SyntacticTemplate(
+        'syl_7_prep_art_adj_noun',
+        'Syllabic-7 Prep Art Adj Noun',
+        [
+            POSSlot('preposition'), POSSlot('article'),
+            POSSlot('adjective'), POSSlot('noun'),
+        ],
+        'Four-slot ~7 syllable line with longer words'
+    ),
+    'syl_7_art_noun_verb_art_noun': SyntacticTemplate(
+        'syl_7_art_noun_verb_art_noun',
+        'Syllabic-7 Art Noun Verb Art Noun',
+        [
+            POSSlot('article'), POSSlot('noun'),
+            POSSlot('verb'),
+            POSSlot('article'), POSSlot('noun'),
+        ],
+        'SVO-ish ~7 syllable line'
+    ),
 }
+
+
+def mono_chain_template(n_syllables: int) -> SyntacticTemplate:
+    """One slot per syllable for dense positional rhyme maps (all content)."""
+    n = max(1, int(n_syllables))
+    # Avoid leading articles — they cannot satisfy bound content rhyme keys.
+    cycle = ("adjective", "noun", "verb")
+    pattern = [POSSlot(cycle[i % 3]) for i in range(n)]
+    pattern[-1] = POSSlot("noun")
+    return SyntacticTemplate(
+        f"syl_mono_{n}",
+        f"Monosyllable chain ({n})",
+        pattern,
+        "One content slot per syllable for positional maps",
+    )
 
 
 class GrammarEngine:
@@ -342,6 +448,95 @@ class GrammarEngine:
                 suitable.append(tid)
 
         return suitable
+
+
+# CMU vowel phones (onset vowel sound → use "an")
+_CMU_VOWELS = frozenset({
+    "AA", "AE", "AH", "AO", "AW", "AY", "EH", "ER", "EY",
+    "IH", "IY", "OW", "OY", "UH", "UW",
+})
+
+# Orthographic fallbacks when CMU has no entry
+_SILENT_H = frozenset({
+    "hour", "hours", "honest", "honestly", "honor", "honour",
+    "honorable", "honourable", "heir", "heirs", "heiress",
+})
+_CONSONANT_U = frozenset({
+    # /ju-/ onsets spelled with u/eu — take "a"
+    "university", "union", "unit", "unified", "unicorn", "uniform",
+    "unique", "unisex", "unison", "universal", "useful", "user",
+    "usual", "utility", "utopia", "eulogy", "eulogies", "euphemism",
+    "euphony", "europe", "european", "euro",
+})
+_CONSONANT_O = frozenset({"one", "once", "ones"})
+
+
+def _first_cmu_phone(word: str) -> Optional[str]:
+    """Return base CMU phone of word onset, or None."""
+    try:
+        import pronouncing
+    except ImportError:
+        return None
+    phones = pronouncing.phones_for_word(word.lower().strip(".,!?;:\"'"))
+    if not phones:
+        return None
+    first = phones[0].split()[0]
+    return "".join(ch for ch in first if ch.isalpha())
+
+
+def starts_with_vowel_sound(word: str) -> bool:
+    """
+    True iff *word* begins with a vowel phone (→ indefinite article "an").
+
+    Prefers CMU; falls back to spelling heuristics for rare lemmas.
+    """
+    if not word:
+        return False
+    lemma = word.lower().strip(".,!?;:\"'")
+    if not lemma:
+        return False
+
+    phone = _first_cmu_phone(lemma)
+    if phone:
+        return phone in _CMU_VOWELS
+
+    if lemma in _SILENT_H or lemma.startswith("honest") or lemma.startswith("honor"):
+        return True
+    if lemma in _CONSONANT_U or lemma in _CONSONANT_O:
+        return False
+    if lemma.startswith(("uni", "eu", "use", "usu")):
+        return False
+    if lemma[0] in "aeiou":
+        return True
+    if lemma[0] == "h" and lemma in _SILENT_H:
+        return True
+    return False
+
+
+def choose_indefinite_article(following_word: str) -> str:
+    """Return 'an' before vowel sounds, else 'a'."""
+    return "an" if starts_with_vowel_sound(following_word) else "a"
+
+
+def resolve_articles(words: List[str]) -> List[str]:
+    """
+    Correct indefinite articles in a token list.
+
+    Leaves 'the' unchanged. Replaces each 'a'/'an' from the following token's
+    onset. Trailing indefinite with no follower is left as 'a'.
+    """
+    if not words:
+        return words
+    out = list(words)
+    for i, tok in enumerate(out):
+        low = tok.lower()
+        if low not in ("a", "an"):
+            continue
+        if i + 1 >= len(out):
+            out[i] = "a"
+            continue
+        out[i] = choose_indefinite_article(out[i + 1])
+    return out
 
 
 def main():

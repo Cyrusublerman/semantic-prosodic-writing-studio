@@ -1,0 +1,30 @@
+{
+  "form_id": "positional_rhyme",
+  "name": "Positional Rhyme",
+  "description": "3-line syllabic form with per-syllable positional rhyme map (ABAABA / BABABAB / ABAABAA)",
+  "total_lines": 3,
+  "stanza_specs": [
+    {
+      "stanza_id": 1,
+      "lines": 3,
+      "rhyme_pattern": [null, null, null],
+      "meter_pattern": "syllabic"
+    }
+  ],
+  "rhyme_pattern": "positional",
+  "meter_pattern": "syllabic",
+  "special_rules": {
+    "syllable_pattern": [6, 7, 7],
+    "rhyme_map": {
+      "unit": "syllable",
+      "null_char": "x",
+      "coalesce_runs": false,
+      "match_mode": "assonance",
+      "lines": ["ABAABA", "BABABAB", "ABAABAA"]
+    }
+  },
+  "device_profile_defaults": {
+    "enjambment_rate": 0.1,
+    "internal_rhyme_rate": 0.5
+  }
+}

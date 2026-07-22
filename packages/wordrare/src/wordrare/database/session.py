@@ -2,13 +2,28 @@
 Database session management.
 """
 
-from sqlalchemy import create_engine
+import logging
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, List, Tuple
 
 from ..config import DATABASE_URL
 from .models import Base
+
+logger = logging.getLogger(__name__)
+
+_PHON_ALTER: List[Tuple[str, str]] = [
+    ("syllable_phones", "JSON"),
+    ("syllable_keys", "JSON"),
+    ("assonance_keys", "JSON"),
+    ("end_keys", "JSON"),
+]
+_WORD_ALTER: List[Tuple[str, str]] = [
+    ("syllable_keys", "JSON"),
+    ("end_key_2", "VARCHAR(256)"),
+    ("end_key_3", "VARCHAR(256)"),
+]
 
 
 class SessionManager:
@@ -30,6 +45,24 @@ class SessionManager:
     def create_tables(self):
         """Create all tables in the database."""
         Base.metadata.create_all(bind=self.engine)
+        self.ensure_schema()
+
+    def ensure_schema(self):
+        """ALTER existing SQLite tables to add columns create_all cannot migrate."""
+        with self.engine.connect() as conn:
+            for table, cols in (("phonetics", _PHON_ALTER), ("word_record", _WORD_ALTER)):
+                try:
+                    existing = {
+                        r[1]
+                        for r in conn.execute(text(f"PRAGMA table_info({table})")).fetchall()
+                    }
+                except Exception:
+                    continue
+                for name, typ in cols:
+                    if name not in existing:
+                        conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {typ}"))
+                        logger.info("ensure_schema: added %s.%s", table, name)
+            conn.commit()
 
     def drop_tables(self):
         """Drop all tables from the database."""
@@ -58,6 +91,7 @@ def get_session_manager() -> SessionManager:
     global _session_manager
     if _session_manager is None:
         _session_manager = SessionManager()
+        _session_manager.create_tables()
     return _session_manager
 
 

@@ -2,99 +2,126 @@ name: SPWS CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-  workflow_dispatch:
 
 jobs:
-  test:
+  test-default:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
         with:
-          enable-cache: true
-
-      - name: Python environment
+          python-version: "3.12"
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install packages
         run: |
+          export PATH="$HOME/.local/bin:$PATH"
           uv venv .venv
-          source .venv/bin/activate
-          export UV_INDEX_URL="${UV_INDEX_URL:-https://pypi.org/simple/}"
+          . .venv/bin/activate
           uv pip install -e "packages/contracts/core[test]" \
-            -e "packages/storage" -e "packages/ingestion" -e "packages/analysis" \
-            -e "packages/revision" -e "packages/adapters/pkl" -e "packages/spws_cli" \
-            -e "packages/wordrare" pytest pytest-cov jsonschema hypothesis
-
-      - name: Contract and adapter tests
+            -e packages/domain -e packages/orchestration -e packages/pipelines \
+            -e packages/storage -e packages/ingestion -e packages/semantics \
+            -e packages/preprocessing -e packages/planning -e packages/generation \
+            -e packages/analysis -e packages/revision -e packages/adapters/pkl \
+            -e packages/adapters/wordrare -e packages/spws_cli -e packages/wordrare \
+            fastapi httpx uvicorn sqlalchemy alembic pytest jsonschema hypothesis pyyaml python-frontmatter
+      - name: Pytest (hash embeddings — smoke)
         run: |
-          source .venv/bin/activate
-          pytest packages/adapters/pkl/tests tests/contract tests/component \
-            tests/integration tests/end_to_end -q
-
-      - name: Domain schema presence
+          . .venv/bin/activate
+          pytest -q \
+            tests/contract \
+            tests/integration \
+            tests/end_to_end \
+            tests/component \
+            tests/stress \
+            packages/contracts/core/tests \
+            packages/adapters/pkl/tests \
+            packages/adapters/wordrare/tests \
+            --ignore=tests/end_to_end/test_studio_playwright.py
+      - name: Install Playwright Chromium + run studio e2e
         run: |
-          test -f schemas/domain/0.1.0/input-package.schema.json
-          test -f schemas/domain/0.1.0/pkl-promotion-bundle.schema.json
-          test -f schemas/domain/0.1.0/compatibility.json
-          test -f typescript/domain/0.1.0/index.d.ts
-
-      - name: Promotion no-write guard
+          . .venv/bin/activate
+          uv pip install playwright uvicorn
+          python -m playwright install --with-deps chromium
+          pytest -q tests/end_to_end/test_studio_playwright.py
+      - name: LLM socket fail-closed
         run: |
-          source .venv/bin/activate
-          pytest packages/adapters/pkl/tests/test_promotion_no_write.py -q
-
-  pinned-library-snapshot:
-    runs-on: ubuntu-latest
-    if: ${{ secrets.LIBRARY_CHECKOUT_TOKEN != '' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Checkout Library at pinned SHA
-        uses: actions/checkout@v4
-        with:
-          repository: Cyrusublerman/Library
-          token: ${{ secrets.LIBRARY_CHECKOUT_TOKEN }}
-          path: _library
-          ref: ${{ vars.PKL_PINNED_SHA || 'main' }}
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
-      - name: Index pinned snapshot and query
-        run: |
-          uv venv .venv
-          source .venv/bin/activate
-          uv pip install -e "packages/contracts/core" -e "packages/adapters/pkl" -e "packages/storage" -e "packages/spws_cli"
-          export SPWS_CONFIG="$PWD/config/spws.toml"
-          # Point cache to runner temp; index from checked-out Library
+          . .venv/bin/activate
           python - <<'PY'
-          from pathlib import Path
-          from spws_pkl_adapter import index_repository, query_index
-          from spws_contracts_core.domain import PKLQuery
-          cache = Path("/tmp/spws-pkl-index")
-          manifest = index_repository(Path("_library"), cache_path=cache)
-          assert manifest["record_count"] >= 0
-          hits = query_index(PKLQuery(text="prosody", result_limit=5), cache)
-          print({"records": manifest["record_count"], "hits": len(hits)})
+          from spws_orchestration.llm_socket import assert_method_family_allowed, LLMMethodFamilyDisabled
+          assert_method_family_allowed("rare_lexical")
+          try:
+              assert_method_family_allowed("llm_bounded")
+          except LLMMethodFamilyDisabled:
+              pass
+          else:
+              raise SystemExit("llm_bounded must fail closed")
+          print("ok")
           PY
 
-  release-artifacts:
+  test-minilm-required:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/contracts-')
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - name: Build release bundle
-        run: |
-          uv venv .venv && source .venv/bin/activate
-          uv pip install -e "packages/contracts/core" build
-          bash tools/build_release_bundle.sh
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+      - uses: actions/setup-python@v5
         with:
-          files: dist/release/*
-          generate_release_notes: true
+          python-version: "3.12"
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install with embeddings
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          uv venv .venv
+          . .venv/bin/activate
+          uv pip install -e "packages/contracts/core[test]" \
+            -e packages/domain -e packages/orchestration -e packages/pipelines \
+            -e packages/storage -e packages/ingestion -e packages/semantics \
+            -e packages/preprocessing -e packages/planning -e packages/generation \
+            -e packages/analysis -e packages/revision -e packages/adapters/pkl \
+            -e packages/adapters/wordrare -e packages/spws_cli -e packages/wordrare \
+            -e ".[embeddings]" sqlalchemy alembic pytest
+      - name: MiniLM meaning gauge (require_model)
+        run: |
+          . .venv/bin/activate
+          python - <<'PY'
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from spws_contracts_core.domain import PrivacyState, RightsState, SimilarityQuery
+          from spws_semantics import MeaningGauge
+          with TemporaryDirectory() as tmp:
+              gauge = MeaningGauge(Path(tmp), debug_hash_embeddings=False, require_model=True)
+              gauge.index_text(
+                  "Meter shapes rhythm in poetry.",
+                  rights=RightsState.PUBLIC,
+                  privacy=PrivacyState.PUBLIC,
+              )
+              gauge.index_text(
+                  "The quiet river remembers autumn leaves.",
+                  rights=RightsState.PUBLIC,
+                  privacy=PrivacyState.PUBLIC,
+              )
+              hits = gauge.similar(SimilarityQuery(text="poetic meter and rhythm", result_limit=3))
+              assert hits.hits, "MiniLM similarity must return hits"
+              print("ok", len(hits.hits))
+          PY
+      - name: Golden tag/similarity tests
+        run: |
+          . .venv/bin/activate
+          pytest -q tests/integration/test_meaning_tags_and_index.py
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install and test studio-web
+        working-directory: apps/studio-web
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile || pnpm install
+          pnpm test
+          pnpm build

@@ -1,0 +1,146 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "spec_id": {
+      "title": "Spec Id",
+      "type": "string"
+    },
+    "mode": {
+      "default": "poetry_revision",
+      "title": "Mode",
+      "type": "string"
+    },
+    "purpose": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purpose"
+    },
+    "audience": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Audience"
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Subject"
+    },
+    "form": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Form"
+    },
+    "voice": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Voice"
+    },
+    "register": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Register"
+    },
+    "length": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Length"
+    },
+    "semantic_arc": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Semantic Arc",
+      "type": "array"
+    },
+    "emotional_arc": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Emotional Arc",
+      "type": "array"
+    },
+    "motif_plan": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Motif Plan",
+      "type": "array"
+    },
+    "constraints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "source_policy": {
+      "additionalProperties": true,
+      "title": "Source Policy",
+      "type": "object"
+    },
+    "machine_assistance_policy": {
+      "additionalProperties": true,
+      "title": "Machine Assistance Policy",
+      "type": "object"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "spec_id"
+  ],
+  "title": "WorkSpecification",
+  "type": "object"
+}

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-semantics"
+version = "0.1.0"
+description = "SPWS meaning gauge: unitisation, encoding, hybrid similarity"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-contracts-core",
+  "spws-domain",
+]
+
+[project.optional-dependencies]
+embeddings = [
+  "sentence-transformers>=3.0",
+  "numpy>=1.26",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

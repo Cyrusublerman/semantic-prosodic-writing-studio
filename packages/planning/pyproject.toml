@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spws-planning"
+version = "0.1.0"
+description = "SPWS source board and work planning"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "spws-contracts-core",
+  "spws-semantics",
+  "spws-storage",
+  "spws-domain",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

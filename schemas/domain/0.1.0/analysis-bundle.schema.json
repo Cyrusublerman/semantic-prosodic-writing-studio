@@ -1,0 +1,310 @@
+{
+  "$defs": {
+    "Annotation": {
+      "additionalProperties": false,
+      "properties": {
+        "annotation_id": {
+          "title": "Annotation Id",
+          "type": "string"
+        },
+        "source_object": {
+          "title": "Source Object",
+          "type": "string"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StructuralScope"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextSpan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "feature": {
+          "title": "Feature",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        },
+        "confidence": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "alternatives": {
+          "items": {},
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "analyser": {
+          "title": "Analyser",
+          "type": "string"
+        },
+        "analyser_version": {
+          "default": "0.1.0",
+          "title": "Analyser Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "annotation_id",
+        "source_object",
+        "feature",
+        "analyser"
+      ],
+      "title": "Annotation",
+      "type": "object"
+    },
+    "StructuralScope": {
+      "enum": [
+        "work",
+        "section",
+        "paragraph",
+        "stanza",
+        "sentence",
+        "line",
+        "phrase",
+        "word",
+        "phoneme"
+      ],
+      "title": "StructuralScope",
+      "type": "string"
+    },
+    "StructuralUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/StructuralScope"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "span": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextSpan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Id"
+        },
+        "child_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Child Ids",
+          "type": "array"
+        },
+        "source_object_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Object Id"
+        },
+        "ordinal": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ordinal"
+        },
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit_id",
+        "scope"
+      ],
+      "title": "StructuralUnit",
+      "type": "object"
+    },
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    },
+    "UtcDateTime": {
+      "format": "date-time",
+      "type": "string",
+      "x-spws-timezone": "UTC"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bundle_id": {
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "source_object_id": {
+      "title": "Source Object Id",
+      "type": "string"
+    },
+    "annotations": {
+      "items": {
+        "$ref": "#/$defs/Annotation"
+      },
+      "title": "Annotations",
+      "type": "array"
+    },
+    "structural_units": {
+      "items": {
+        "$ref": "#/$defs/StructuralUnit"
+      },
+      "title": "Structural Units",
+      "type": "array"
+    },
+    "created_at": {
+      "$ref": "#/$defs/UtcDateTime"
+    },
+    "component_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Component Versions",
+      "type": "object"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "bundle_id",
+    "source_object_id",
+    "created_at"
+  ],
+  "title": "AnalysisBundle",
+  "type": "object"
+}

@@ -13,11 +13,19 @@ ROOT = Path(__file__).resolve().parent.parent
 
 PACKAGE_SRC_DIRS = [
     ROOT / "packages" / "contracts" / "core" / "src",
+    ROOT / "packages" / "domain" / "src",
+    ROOT / "packages" / "orchestration" / "src",
+    ROOT / "packages" / "pipelines" / "src",
     ROOT / "packages" / "storage" / "src",
     ROOT / "packages" / "ingestion" / "src",
     ROOT / "packages" / "analysis" / "src",
     ROOT / "packages" / "revision" / "src",
+    ROOT / "packages" / "semantics" / "src",
+    ROOT / "packages" / "preprocessing" / "src",
+    ROOT / "packages" / "planning" / "src",
+    ROOT / "packages" / "generation" / "src",
     ROOT / "packages" / "adapters" / "pkl" / "src",
+    ROOT / "packages" / "adapters" / "wordrare" / "src",
     ROOT / "packages" / "spws_cli" / "src",
     ROOT / "packages" / "wordrare" / "src",
 ]
@@ -67,6 +75,7 @@ enabled = false
 model_id = "sentence-transformers/all-MiniLM-L6-v2"
 model_version = "unspecified"
 require_lexical_gate = true
+debug_hash_embeddings = true
 
 [policy]
 fail_closed_on_unknown_rights = true

@@ -1,0 +1,57 @@
+id: constrained_poetry_generation_v0
+version: "0.1.0"
+purpose: "Generate poetry under form/meter/rhyme constraints: spec → scaffold → realize → validate → emit."
+accepted_inputs:
+  - GenerationSpec
+produced_outputs:
+  - PoemDraft
+  - ConstraintReport
+required_contract_versions:
+  GenerationSpec: "0.1.0"
+human_gates: []
+failure_policy: fail_fast
+caching_policy: none
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: load_spec
+    component_id: generation.load_spec
+    inputs:
+      spec: generation_spec
+    outputs:
+      spec: generation_spec
+  - step_id: select_theme
+    component_id: generation.select_theme
+    inputs:
+      spec: generation_spec
+    outputs:
+      motifs: selected_motifs
+  - step_id: build_scaffold
+    component_id: generation.build_scaffold
+    inputs:
+      spec: generation_spec
+      motifs: selected_motifs
+    outputs:
+      scaffold: poem_scaffold
+  - step_id: realize_lines
+    component_id: generation.realize_lines
+    inputs:
+      scaffold: poem_scaffold
+      spec: generation_spec
+    outputs:
+      draft: poem_draft
+  - step_id: validate_constraints
+    component_id: generation.validate_constraints
+    inputs:
+      draft: poem_draft
+      spec: generation_spec
+    outputs:
+      report: constraint_report
+      draft: poem_draft
+  - step_id: emit_poem
+    component_id: generation.emit_poem
+    inputs:
+      draft: poem_draft
+      report: constraint_report
+    outputs:
+      poem: poem_text
+      report: constraint_report

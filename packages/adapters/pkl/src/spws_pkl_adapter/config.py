@@ -56,6 +56,7 @@ class EmbeddingSettings:
     model_id: str
     model_version: str
     require_lexical_gate: bool
+    debug_hash_embeddings: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,6 +120,7 @@ def load_config(config_path: Path | None = None) -> SpwsConfig:
             model_id=str(embeddings_raw.get("model_id", "sentence-transformers/all-MiniLM-L6-v2")),
             model_version=str(embeddings_raw.get("model_version", "unspecified")),
             require_lexical_gate=bool(embeddings_raw.get("require_lexical_gate", True)),
+            debug_hash_embeddings=bool(embeddings_raw.get("debug_hash_embeddings", False)),
         ),
         policy=PolicySettings(
             fail_closed_on_unknown_rights=bool(policy_raw.get("fail_closed_on_unknown_rights", True)),

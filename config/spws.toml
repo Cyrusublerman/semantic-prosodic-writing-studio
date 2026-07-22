@@ -22,6 +22,7 @@ enabled = false
 model_id = "sentence-transformers/all-MiniLM-L6-v2"
 model_version = "unspecified"
 require_lexical_gate = true
+debug_hash_embeddings = false
 
 [policy]
 fail_closed_on_unknown_rights = true

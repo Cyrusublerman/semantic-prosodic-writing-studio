@@ -1,0 +1,153 @@
+{
+  "$defs": {
+    "MeaningScale": {
+      "enum": [
+        "word",
+        "sense",
+        "phrase",
+        "sentence",
+        "paragraph",
+        "fragment_chunk"
+      ],
+      "title": "MeaningScale",
+      "type": "string"
+    },
+    "PrivacyState": {
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private",
+        "unknown"
+      ],
+      "title": "PrivacyState",
+      "type": "string"
+    },
+    "RightsState": {
+      "enum": [
+        "public",
+        "internal",
+        "restricted",
+        "private",
+        "unknown"
+      ],
+      "title": "RightsState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "query_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Query Id"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    },
+    "unit_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit Id"
+    },
+    "target_scales": {
+      "items": {
+        "$ref": "#/$defs/MeaningScale"
+      },
+      "title": "Target Scales",
+      "type": "array"
+    },
+    "fragment_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fragment Types",
+      "type": "array"
+    },
+    "themes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Themes",
+      "type": "array"
+    },
+    "rights_allowed": {
+      "items": {
+        "$ref": "#/$defs/RightsState"
+      },
+      "title": "Rights Allowed",
+      "type": "array"
+    },
+    "privacy_allowed": {
+      "items": {
+        "$ref": "#/$defs/PrivacyState"
+      },
+      "title": "Privacy Allowed",
+      "type": "array"
+    },
+    "commit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit"
+    },
+    "result_limit": {
+      "default": 10,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Result Limit",
+      "type": "integer"
+    },
+    "weight_vector": {
+      "default": 0.7,
+      "title": "Weight Vector",
+      "type": "number"
+    },
+    "weight_tags": {
+      "default": 0.2,
+      "title": "Weight Tags",
+      "type": "number"
+    },
+    "weight_graph": {
+      "default": 0.1,
+      "title": "Weight Graph",
+      "type": "number"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "title": "SimilarityQuery",
+  "type": "object"
+}

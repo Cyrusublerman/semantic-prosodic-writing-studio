@@ -1,0 +1,16 @@
+{
+  "component_id": "meaning_gauge",
+  "component_version": "0.1.0",
+  "functional_category": "analysis",
+  "capabilities": ["unitise", "encode", "similar"],
+  "accepted_contracts": ["SimilarityQuery", "MeaningUnit"],
+  "produced_contracts": ["SimilarityResultSet", "MeaningProfile"],
+  "languages": ["en"],
+  "determinism": "deterministic",
+  "dependencies": ["spws_semantics"],
+  "data_and_model_versions": {
+    "default_embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "rights_and_privacy_behaviour": "fail_closed",
+  "failure_modes": ["model_unavailable", "empty_index"]
+}

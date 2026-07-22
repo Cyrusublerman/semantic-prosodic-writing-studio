@@ -58,7 +58,8 @@
     },
     "syllables_per_line": 10,
     "feet_per_line": 5,
-    "foot_pattern": "01"
+    "foot_pattern": "01",
+    "rhyme_span": {"mode": "end", "syllables": 1, "match_mode": "perfect"}
   },
   "device_profile_defaults": {
     "enjambment_rate": 0.2,

@@ -42,7 +42,100 @@ METER_PATTERNS = {
     'trochaic_tetrameter': MeterPattern('Trochaic Tetrameter', '10', 2, 4),  # 8 syllables
     'anapestic_tetrameter': MeterPattern('Anapestic Tetrameter', '001', 3, 4),  # 12 syllables
     'dactylic_hexameter': MeterPattern('Dactylic Hexameter', '100', 3, 6),  # 18 syllables
+    # Syllable-count forms (haiku, tanka): stress feet not required
+    'syllabic': MeterPattern('Syllabic', '', 1, 0),
 }
+
+
+def _normalize_stress_bits(stress: str) -> str:
+    """Normalize stress markers to 0/1 bits (secondary -> unstressed)."""
+    if not stress:
+        return ""
+    return "".join("1" if c == "1" else "0" for c in stress if c in "012")
+
+
+def expected_stress_bits(meter_pattern, target_syllables: int) -> str:
+    """
+    Tile/truncate a foot pattern to ``target_syllables`` stress bits.
+
+    ``meter_pattern`` may be a MeterPattern, a METER_PATTERNS key, or a raw
+    foot bit string (e.g. ``"01"``). Returns ``""`` for syllabic / empty feet.
+    """
+    if not target_syllables or target_syllables <= 0:
+        return ""
+
+    foot = ""
+    if isinstance(meter_pattern, MeterPattern):
+        if not meter_pattern.foot_pattern:
+            return ""
+        foot = meter_pattern.foot_pattern
+    elif isinstance(meter_pattern, str):
+        key = meter_pattern.strip()
+        if key == "syllabic" or key.startswith("syllabic"):
+            return ""
+        if key in METER_PATTERNS:
+            foot = METER_PATTERNS[key].foot_pattern or ""
+            if not foot:
+                return ""
+        else:
+            foot = "".join(c for c in key if c in "01")
+            if not foot:
+                return ""
+    else:
+        return ""
+
+    return (foot * ((target_syllables // len(foot)) + 1))[:target_syllables]
+
+
+def stress_fit_score(word_stress: str, expected_slice: str) -> float:
+    """
+    How well ``word_stress`` fits ``expected_slice`` (0.0–1.0).
+
+    Bit agreement over the overlapping prefix; length mismatch soft-penalizes.
+    Empty expected → 1.0 (neutral). Empty word with non-empty expected → 0.0.
+    """
+    word_bits = _normalize_stress_bits(word_stress)
+    exp_bits = _normalize_stress_bits(expected_slice)
+    if not exp_bits:
+        return 1.0
+    if not word_bits:
+        return 0.0
+
+    n = min(len(word_bits), len(exp_bits))
+    matches = sum(a == b for a, b in zip(word_bits[:n], exp_bits[:n]))
+    bit_score = matches / n
+    len_pen = abs(len(word_bits) - len(exp_bits)) / max(len(exp_bits), 1)
+    return max(0.0, bit_score * (1.0 - 0.5 * min(1.0, len_pen)))
+
+
+def rank_by_stress(candidates, expected: str):
+    """
+    Rank candidates by stress prefix fit to ``expected`` (higher fit first).
+
+    Accepts WordRecord-like objects (``.stress_pattern``), dicts with
+    ``stress_pattern``, or ``(item, stress)`` pairs. Stable for ties.
+
+    Parent wiring (Track R / line_realizer): pass ``constraints['expected_stress']``
+    into WordSelector ranking, or call this on WordRecord pools before selection.
+    """
+    if not expected or not candidates:
+        return list(candidates)
+
+    exp = _normalize_stress_bits(expected)
+
+    def _stress_of(c) -> str:
+        if isinstance(c, tuple) and len(c) >= 2:
+            return _normalize_stress_bits(str(c[1] or ""))
+        if isinstance(c, dict):
+            return _normalize_stress_bits(str(c.get("stress_pattern") or ""))
+        return _normalize_stress_bits(str(getattr(c, "stress_pattern", None) or ""))
+
+    def _key(c) -> float:
+        bits = _stress_of(c)
+        slice_ = exp[: len(bits)] if bits else exp
+        return -stress_fit_score(bits, slice_)
+
+    return sorted(candidates, key=_key)
 
 
 @dataclass
@@ -143,13 +236,19 @@ class MeterEngine:
         # Minimum 1 syllable
         return max(1, syllable_count)
 
-    def analyze_line(self, line: str, target_meter: str = 'iambic_pentameter') -> LineAnalysis:
+    def analyze_line(
+        self,
+        line: str,
+        target_meter: str = 'iambic_pentameter',
+        target_syllables: Optional[int] = None,
+    ) -> LineAnalysis:
         """
         Analyze meter of a line.
 
         Args:
             line: Text of the line
             target_meter: Target meter pattern name
+            target_syllables: Optional syllable target (required for syllabic forms)
 
         Returns:
             LineAnalysis object
@@ -178,13 +277,32 @@ class MeterEngine:
             word_stress = self.get_word_stress(word)
 
             if word_stress:
-                stress_pattern += word_stress
-                total_syllables += len(word_stress)
+                # Normalize secondary stress markers to unstressed for bit compare
+                bits = ''.join('1' if c == '1' else '0' for c in word_stress)
+                stress_pattern += bits
+                total_syllables += len(bits)
             else:
                 # Estimate syllables and use neutral stress
                 syllables = self.get_word_syllables(word)
                 stress_pattern += '0' * syllables
                 total_syllables += syllables
+
+        # Syllabic forms: count only, no foot stress target
+        if target_meter == 'syllabic' or target_meter.startswith('syllabic'):
+            expected = target_syllables if target_syllables is not None else total_syllables
+            syllable_deviation = abs(total_syllables - expected)
+            is_valid = syllable_deviation == 0
+            foot_accuracy = 1.0 if is_valid else max(0.0, 1.0 - syllable_deviation / max(expected, 1))
+            return LineAnalysis(
+                line_text=line,
+                syllable_count=total_syllables,
+                stress_pattern=stress_pattern,
+                meter_match=target_meter if is_valid else None,
+                foot_accuracy=foot_accuracy,
+                syllable_deviation=syllable_deviation,
+                stress_deviation=0.0 if is_valid else min(1.0, syllable_deviation / max(expected, 1)),
+                is_valid=is_valid,
+            )
 
         # Get target meter
         meter_pattern = self.meter_patterns.get(target_meter)
@@ -203,7 +321,11 @@ class MeterEngine:
             )
 
         # Compute metrics
-        expected_syllables = meter_pattern.expected_syllables
+        expected_syllables = (
+            target_syllables
+            if target_syllables is not None
+            else meter_pattern.expected_syllables
+        )
         syllable_deviation = abs(total_syllables - expected_syllables)
 
         # Compute foot accuracy
@@ -215,6 +337,10 @@ class MeterEngine:
 
         # Compute stress deviation (Hamming distance)
         expected_pattern = meter_pattern.get_expected_stress_pattern()
+        if target_syllables is not None and expected_pattern:
+            # Tile/truncate foot pattern to actual target length
+            foot = meter_pattern.foot_pattern
+            expected_pattern = (foot * ((target_syllables // len(foot)) + 1))[:target_syllables]
         stress_deviation = self._compute_stress_deviation(
             stress_pattern,
             expected_pattern
@@ -236,6 +362,16 @@ class MeterEngine:
             stress_deviation=stress_deviation,
             is_valid=is_valid
         )
+
+    def meets_stress_gate(
+        self,
+        analysis: LineAnalysis,
+        min_foot_accuracy: float = 0.55,
+    ) -> bool:
+        """True if ``analysis.foot_accuracy`` meets the GenerationSpec hard gate."""
+        if analysis is None:
+            return False
+        return analysis.foot_accuracy >= float(min_foot_accuracy)
 
     def _compute_foot_accuracy(self, stress_pattern: str,
                                foot_pattern: str, feet_count: int) -> float:
@@ -366,7 +502,7 @@ def main():
         type=str,
         default='iambic_pentameter',
         choices=list(METER_PATTERNS.keys()),
-        help='Target meter pattern'
+        help='Target meter pattern (includes syllabic)'
     )
     parser.add_argument(
         '--repair',

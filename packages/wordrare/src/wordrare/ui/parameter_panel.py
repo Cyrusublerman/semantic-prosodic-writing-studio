@@ -102,6 +102,13 @@ class ParameterPanel:
         print(poem.text)
         print("=" * 70)
         print(f"\nRun ID: {poem.run_id}")
+        if self.current_spec.include_annotations or self.current_spec.debug_mode:
+            from ..generation.annotator import PoemAnnotator
+
+            print("\n" + "-" * 70)
+            print("PHONETIC / METER AUDIT")
+            print("-" * 70)
+            print(PoemAnnotator().format_debug_strip(poem.annotations))
 
         return poem
 

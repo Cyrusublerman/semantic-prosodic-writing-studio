@@ -1,0 +1,370 @@
+{
+  "$defs": {
+    "MeaningScale": {
+      "enum": [
+        "word",
+        "sense",
+        "phrase",
+        "sentence",
+        "paragraph",
+        "fragment_chunk"
+      ],
+      "title": "MeaningScale",
+      "type": "string"
+    },
+    "PrivacyState": {
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private",
+        "unknown"
+      ],
+      "title": "PrivacyState",
+      "type": "string"
+    },
+    "RightsState": {
+      "enum": [
+        "public",
+        "internal",
+        "restricted",
+        "private",
+        "unknown"
+      ],
+      "title": "RightsState",
+      "type": "string"
+    },
+    "SimilarityHit": {
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "scale": {
+          "$ref": "#/$defs/MeaningScale"
+        },
+        "score_combined": {
+          "title": "Score Combined",
+          "type": "number"
+        },
+        "score_vector": {
+          "default": 0.0,
+          "title": "Score Vector",
+          "type": "number"
+        },
+        "score_tags": {
+          "default": 0.0,
+          "title": "Score Tags",
+          "type": "number"
+        },
+        "score_graph": {
+          "default": 0.0,
+          "title": "Score Graph",
+          "type": "number"
+        },
+        "explanation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Explanation"
+        },
+        "object_uid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Object Uid"
+        },
+        "span": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextSpan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "theme_tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Theme Tags",
+          "type": "array"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit_id",
+        "text",
+        "scale",
+        "score_combined"
+      ],
+      "title": "SimilarityHit",
+      "type": "object"
+    },
+    "SimilarityQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "query_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query Id"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "unit_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit Id"
+        },
+        "target_scales": {
+          "items": {
+            "$ref": "#/$defs/MeaningScale"
+          },
+          "title": "Target Scales",
+          "type": "array"
+        },
+        "fragment_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fragment Types",
+          "type": "array"
+        },
+        "themes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Themes",
+          "type": "array"
+        },
+        "rights_allowed": {
+          "items": {
+            "$ref": "#/$defs/RightsState"
+          },
+          "title": "Rights Allowed",
+          "type": "array"
+        },
+        "privacy_allowed": {
+          "items": {
+            "$ref": "#/$defs/PrivacyState"
+          },
+          "title": "Privacy Allowed",
+          "type": "array"
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Commit"
+        },
+        "result_limit": {
+          "default": 10,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Result Limit",
+          "type": "integer"
+        },
+        "weight_vector": {
+          "default": 0.7,
+          "title": "Weight Vector",
+          "type": "number"
+        },
+        "weight_tags": {
+          "default": 0.2,
+          "title": "Weight Tags",
+          "type": "number"
+        },
+        "weight_graph": {
+          "default": 0.1,
+          "title": "Weight Graph",
+          "type": "number"
+        },
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "SimilarityQuery",
+      "type": "object"
+    },
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "query": {
+      "$ref": "#/$defs/SimilarityQuery"
+    },
+    "hits": {
+      "items": {
+        "$ref": "#/$defs/SimilarityHit"
+      },
+      "title": "Hits",
+      "type": "array"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    },
+    "model_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Version"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "title": "SimilarityResultSet",
+  "type": "object"
+}

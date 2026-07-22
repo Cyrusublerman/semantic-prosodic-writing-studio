@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "original_text": {
+      "title": "Original Text",
+      "type": "string"
+    },
+    "revised_text": {
+      "title": "Revised Text",
+      "type": "string"
+    },
+    "operation": {
+      "title": "Operation",
+      "type": "string"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "affected_constraints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Affected Constraints",
+      "type": "array"
+    },
+    "predicted_improvements": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Predicted Improvements",
+      "type": "array"
+    },
+    "predicted_degradations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Predicted Degradations",
+      "type": "array"
+    },
+    "candidate_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidate Id"
+    },
+    "line_index": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Line Index"
+    },
+    "target_span": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextSpan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation_id",
+    "original_text",
+    "revised_text",
+    "operation"
+  ],
+  "title": "RevisionOperation",
+  "type": "object"
+}

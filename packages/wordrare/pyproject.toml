@@ -22,6 +22,8 @@ api = ["fastapi>=0.110", "uvicorn>=0.27"]
 
 [project.scripts]
 wordrare = "wordrare.generation.engine:main"
+wordrare-rewrite = "wordrare.generation.prose_rewrite:main"
+wordrare-debug = "wordrare.ui.form_debugger:main"
 
 [tool.setuptools.package-dir]
 "" = "src"

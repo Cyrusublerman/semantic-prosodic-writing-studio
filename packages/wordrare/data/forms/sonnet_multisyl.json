@@ -1,0 +1,49 @@
+{
+  "form_id": "sonnet_multisyl",
+  "name": "Shakespearean Sonnet (Multisyl)",
+  "description": "14-line poem with ABAB CDCD EFEF GG rhyme scheme in iambic pentameter; end-rhyme matched on 2 syllables",
+  "total_lines": 14,
+  "stanza_specs": [
+    {
+      "stanza_id": 1,
+      "lines": 4,
+      "rhyme_pattern": ["A", "B", "A", "B"],
+      "meter_pattern": "iambic_pentameter"
+    },
+    {
+      "stanza_id": 2,
+      "lines": 4,
+      "rhyme_pattern": ["C", "D", "C", "D"],
+      "meter_pattern": "iambic_pentameter"
+    },
+    {
+      "stanza_id": 3,
+      "lines": 4,
+      "rhyme_pattern": ["E", "F", "E", "F"],
+      "meter_pattern": "iambic_pentameter"
+    },
+    {
+      "stanza_id": 4,
+      "lines": 2,
+      "rhyme_pattern": ["G", "G"],
+      "meter_pattern": "iambic_pentameter"
+    }
+  ],
+  "rhyme_pattern": "ABAB CDCD EFEF GG",
+  "meter_pattern": "iambic_pentameter",
+  "special_rules": {
+    "volta": {
+      "position": 13,
+      "description": "Thematic turn or resolution in final couplet"
+    },
+    "syllables_per_line": 10,
+    "feet_per_line": 5,
+    "foot_pattern": "01",
+    "rhyme_span": {"mode": "end", "syllables": 2, "match_mode": "perfect"}
+  },
+  "device_profile_defaults": {
+    "enjambment_rate": 0.3,
+    "caesura_rate": 0.4,
+    "internal_rhyme_rate": 0.1
+  }
+}

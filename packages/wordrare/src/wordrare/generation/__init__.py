@@ -2,11 +2,13 @@
 Generation module for poem creation.
 """
 
+from .annotator import PoemAnnotator
+from .engine import GeneratedPoem, PoemGenerator
 from .generation_spec import GenerationSpec, create_default_spec
-from .theme_selector import ThemeSelector
-from .scaffolding import Scaffolder, PoemScaffold, LineScaffold
 from .line_realizer import LineRealizer, WordSelector
-from .engine import PoemGenerator, GeneratedPoem
+from .prose_rewrite import ProseRewriter
+from .scaffolding import LineScaffold, PoemScaffold, Scaffolder
+from .theme_selector import ThemeSelector
 
 __all__ = [
     "GenerationSpec",
@@ -18,5 +20,7 @@ __all__ = [
     "LineRealizer",
     "WordSelector",
     "PoemGenerator",
-    "GeneratedPoem"
+    "GeneratedPoem",
+    "PoemAnnotator",
+    "ProseRewriter",
 ]

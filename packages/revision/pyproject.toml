@@ -11,6 +11,9 @@ dependencies = [
   "spws-contracts-core",
   "spws-storage",
   "spws-analysis",
+  "spws-domain",
+  "spws-semantics",
+  "spws-orchestration",
 ]
 
 [tool.setuptools.package-dir]

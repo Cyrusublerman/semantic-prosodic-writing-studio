@@ -14,6 +14,10 @@ dependencies = [
   "spws-analysis",
   "spws-revision",
   "spws-pkl-adapter",
+  "spws-semantics",
+  "spws-preprocessing",
+  "spws-planning",
+  "spws-generation",
 ]
 
 [project.scripts]

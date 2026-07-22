@@ -1,0 +1,54 @@
+id: source_board_v0
+version: "0.1.0"
+purpose: "Assemble a source board from retained materials: load, itemize, rank/cluster, and emit a board view."
+accepted_inputs:
+  - RawSource
+  - PKLQuery
+produced_outputs:
+  - SourceBoard
+  - SourceBoardItem
+required_contract_versions:
+  RawSource: "0.1.0"
+  PKLQuery: "0.1.0"
+human_gates:
+  - curate_board
+failure_policy: fail_fast
+caching_policy: none
+reproducibility_policy: seeded_where_supported
+steps:
+  - step_id: query_sources
+    component_id: pkl.query_sources
+    inputs:
+      query: pkl_query
+    outputs:
+      hits: source_hits
+  - step_id: load_sources
+    component_id: storage.load_raw_sources
+    inputs:
+      hits: source_hits
+    outputs:
+      sources: raw_sources
+  - step_id: build_board_items
+    component_id: board.build_items
+    inputs:
+      sources: raw_sources
+    outputs:
+      items: board_items
+  - step_id: rank_and_cluster
+    component_id: board.rank_cluster
+    inputs:
+      items: board_items
+    outputs:
+      items: board_items
+  - step_id: curate_board
+    component_id: board.human_curate
+    inputs:
+      items: board_items
+    outputs:
+      items: board_items
+  - step_id: emit_board
+    component_id: board.emit_view
+    inputs:
+      items: board_items
+    outputs:
+      board: source_board

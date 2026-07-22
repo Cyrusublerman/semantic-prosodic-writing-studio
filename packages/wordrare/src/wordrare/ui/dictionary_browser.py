@@ -79,6 +79,21 @@ class DictionaryBrowser:
         print(f"  Syllables: {word_record.syllable_count or 'N/A'}")
         print(f"  Stress Pattern: {word_record.stress_pattern or 'N/A'}")
         print(f"  Rhyme Key: {word_record.rhyme_key or 'N/A'}")
+        try:
+            from ..database import Phonetics, get_session as _gs
+
+            with _gs() as session:
+                phon = session.query(Phonetics).filter_by(lemma=word_record.lemma).first()
+            if phon:
+                if phon.ipa_dict_uk:
+                    print(f"  IPA (UK): {phon.ipa_dict_uk}")
+                if phon.onset or phon.nucleus or phon.coda:
+                    print(
+                        f"  Onset/Nucleus/Coda: "
+                        f"{phon.onset or '-'} / {phon.nucleus or '-'} / {phon.coda or '-'}"
+                    )
+        except Exception:
+            pass
 
         print(f"\nRarity:")
         print(f"  Score: {word_record.rarity_score:.3f}" if word_record.rarity_score else "  Score: N/A")

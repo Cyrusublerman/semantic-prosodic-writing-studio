@@ -15,7 +15,7 @@ from .models import (
     WordRecord,
     GenerationRun,
 )
-from .session import SessionManager, get_session
+from .session import SessionManager, get_session, get_session_manager
 
 __all__ = [
     "Base",
@@ -31,4 +31,5 @@ __all__ = [
     "GenerationRun",
     "SessionManager",
     "get_session",
+    "get_session_manager",
 ]

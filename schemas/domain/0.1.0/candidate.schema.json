@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "CandidateStatus": {
+      "enum": [
+        "proposed",
+        "rejected",
+        "accepted",
+        "combined",
+        "failed"
+      ],
+      "title": "CandidateStatus",
+      "type": "string"
+    },
+    "TextSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "start_char": {
+          "minimum": 0,
+          "title": "Start Char",
+          "type": "integer"
+        },
+        "end_char": {
+          "minimum": 0,
+          "title": "End Char",
+          "type": "integer"
+        },
+        "start_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Byte"
+        },
+        "end_byte": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Byte"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quote"
+        }
+      },
+      "required": [
+        "start_char",
+        "end_char"
+      ],
+      "title": "TextSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "content": {
+      "title": "Content",
+      "type": "string"
+    },
+    "method_family": {
+      "title": "Method Family",
+      "type": "string"
+    },
+    "generation_spec_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generation Spec Id"
+    },
+    "source_material": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Material",
+      "type": "array"
+    },
+    "constraint_trace": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Constraint Trace",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "status": {
+      "$ref": "#/$defs/CandidateStatus",
+      "default": "proposed"
+    },
+    "provenance_note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provenance Note"
+    },
+    "target_span": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextSpan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "line_index": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Line Index"
+    },
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "content",
+    "method_family"
+  ],
+  "title": "Candidate",
+  "type": "object"
+}

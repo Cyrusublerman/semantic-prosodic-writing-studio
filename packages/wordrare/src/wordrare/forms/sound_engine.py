@@ -10,10 +10,11 @@ Handles:
 
 import re
 import logging
-from typing import List, Tuple, Optional, Set
+from typing import Dict, List, Tuple, Optional, Set, Any
 from dataclasses import dataclass
 
 from ..database import Phonetics, WordRecord, get_session
+from ..phonetics.ipa_processor import IPAProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,16 @@ class RhymeMatch:
     similarity: float  # 0.0 to 1.0
 
 
+@dataclass
+class LineSyllable:
+    """One syllable aligned on a line."""
+    lemma: str
+    word_syl_i: int
+    line_syl_i: int
+    phones: List[str]
+    key: str
+
+
 class SoundEngine:
     """Analyzes and detects sound patterns in words."""
 
@@ -34,6 +45,8 @@ class SoundEngine:
         # Thresholds for rhyme classification
         self.perfect_rhyme_threshold = 0.95
         self.slant_rhyme_threshold = 0.7
+        self._ipa = IPAProcessor()
+        self._syl_cache: Dict[str, List[List[str]]] = {}
 
     def get_rhyme_key(self, word: str) -> Optional[str]:
         """
@@ -56,7 +69,113 @@ class SoundEngine:
             if word_record:
                 return word_record.rhyme_key
 
+        # Runtime CMU fallback
+        phones = self._ipa.get_cmu_phones(word)
+        if phones:
+            return self._ipa.extract_rhyme_key(phones)
         return None
+
+    def get_word_syllables_phones(self, lemma: str) -> List[List[str]]:
+        """Syllabified ARPAbet for a lemma (cached)."""
+        key = lemma.lower().strip(".,!?;:\"'")
+        if key in self._syl_cache:
+            return self._syl_cache[key]
+        with get_session() as session:
+            phon = session.query(Phonetics).filter_by(lemma=key).first()
+            if phon and phon.syllable_phones:
+                self._syl_cache[key] = phon.syllable_phones
+                return phon.syllable_phones
+        phones = self._ipa.get_cmu_phones(key)
+        if not phones:
+            est = self._ipa.estimate_oov(key)
+            syls = est.get("syllable_phones") or []
+            self._syl_cache[key] = syls
+            return syls
+        syls = self._ipa.syllabify_arpabet(phones)
+        self._syl_cache[key] = syls
+        return syls
+
+    def get_end_span_key(self, lemma: str, n: int = 1, mode: str = "perfect") -> str:
+        phones = self._ipa.get_cmu_phones(lemma)
+        if not phones:
+            syls = self.get_word_syllables_phones(lemma)
+            flat = [p for s in syls for p in s]
+            phones = flat
+        if not phones:
+            return ""
+        if n <= 0:
+            return self._ipa.line_span_key(phones, mode=mode)
+        return self._ipa.end_span_key(phones, n=n, mode=mode)
+
+    def get_span_key(
+        self, lemma: str, syl_start: int, syl_end: int, mode: str = "perfect"
+    ) -> str:
+        phones = self._ipa.get_cmu_phones(lemma)
+        if not phones:
+            syls = self.get_word_syllables_phones(lemma)
+            phones = [p for s in syls for p in s]
+        if not phones:
+            return ""
+        return self._ipa.span_rhyme_key(phones, syl_start, syl_end, mode=mode)
+
+    def align_line_syllables(
+        self, tokens: List[str], mode: str = "perfect"
+    ) -> List[LineSyllable]:
+        """Map tokens to line-level syllable indices."""
+        out: List[LineSyllable] = []
+        line_i = 0
+        for tok in tokens:
+            lemma = tok.lower().strip(".,!?;:\"'")
+            if not lemma:
+                continue
+            syls = self.get_word_syllables_phones(lemma)
+            if not syls:
+                syls = [[]]
+            for wi, phones in enumerate(syls):
+                key = self._ipa.syllable_rhyme_key(phones, mode=mode) if phones else ""
+                out.append(
+                    LineSyllable(
+                        lemma=lemma,
+                        word_syl_i=wi,
+                        line_syl_i=line_i,
+                        phones=list(phones),
+                        key=key,
+                    )
+                )
+                line_i += 1
+        return out
+
+    def line_span_key(
+        self,
+        tokens: List[str],
+        syl_start: int = 0,
+        syl_end: Optional[int] = None,
+        mode: str = "perfect",
+    ) -> str:
+        aligned = self.align_line_syllables(tokens, mode=mode)
+        if not aligned:
+            return ""
+        end = syl_end if syl_end is not None else len(aligned)
+        parts = [
+            a.key
+            for a in aligned
+            if syl_start <= a.line_syl_i < end and a.key
+        ]
+        return " | ".join(parts)
+
+    def compare_span(self, key_a: str, key_b: str, mode: str = "perfect") -> float:
+        if not key_a or not key_b:
+            return 0.0
+        if key_a == key_b:
+            return 1.0
+        if mode == "assonance":
+            # compare nuclei only (already nucleus if mode used at extract)
+            return 1.0 if key_a == key_b else self.compute_rhyme_similarity(
+                key_a.replace(" | ", " "), key_b.replace(" | ", " ")
+            )
+        return self.compute_rhyme_similarity(
+            key_a.replace(" | ", " "), key_b.replace(" | ", " ")
+        )
 
     def compute_rhyme_similarity(self, rhyme_key1: str, rhyme_key2: str) -> float:
         """
@@ -139,15 +258,21 @@ class SoundEngine:
         """
         Analyze partial rhyme (assonance/consonance).
 
-        Args:
-            word1: First word
-            word2: Second word
-
         Returns:
             Rhyme type or None
         """
-        # This would require more sophisticated phonetic analysis
-        # For now, return None (no partial rhyme detected)
+        k1 = self.get_end_span_key(word1, 1, mode="assonance")
+        k2 = self.get_end_span_key(word2, 1, mode="assonance")
+        if k1 and k2 and k1 == k2:
+            return "assonance"
+
+        with get_session() as session:
+            p1 = session.query(Phonetics).filter_by(lemma=word1.lower()).first()
+            p2 = session.query(Phonetics).filter_by(lemma=word2.lower()).first()
+            c1 = (p1.coda if p1 else "") or ""
+            c2 = (p2.coda if p2 else "") or ""
+            if c1 and c2 and c1 == c2:
+                return "consonance"
         return None
 
     def find_rhymes(self, word: str, candidate_words: List[str],

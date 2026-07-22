@@ -165,14 +165,16 @@ def _hash_embedding(text: str, dims: int = 32) -> list[float]:
     return [v / norm for v in values]
 
 
-def embed_text(text: str) -> list[float]:
+def embed_text(text: str, *, debug_hash_embeddings: bool = True, model_id: str | None = None) -> list[float]:
     try:
         from sentence_transformers import SentenceTransformer
 
-        model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        model = SentenceTransformer(model_id or "sentence-transformers/all-MiniLM-L6-v2")
         vector = model.encode(text, normalize_embeddings=True)
         return [float(v) for v in vector.tolist()]
     except Exception:
+        if not debug_hash_embeddings:
+            raise RuntimeError("Embedding model unavailable and debug_hash_embeddings is false")
         return _hash_embedding(text)
 
 
@@ -186,13 +188,40 @@ class EmbeddingRetriever:
             config.embeddings.model_id,
             config.embeddings.model_version,
         )
+        self._debug_hash = bool(getattr(config.embeddings, "debug_hash_embeddings", True))
 
     def index_record(self, uid: str, commit_sha: str, digest: str, body: str, rights: RightsState, privacy: PrivacyState) -> None:
         decision = allows_embeddings(rights, privacy, self.config.policy)
         if not decision.allowed:
             self.store.clear_object(uid, commit_sha)
             return
-        raw_chunks = chunk_text(body)
+        # Prefer sentence/paragraph-aware chunks via meaning unitiser when available
+        try:
+            from spws_semantics.unitise import unitise_text
+            from spws_contracts_core.domain import MeaningScale
+
+            units = unitise_text(
+                body,
+                object_uid=uid,
+                commit_sha=commit_sha,
+                scales=[MeaningScale.SENTENCE, MeaningScale.PARAGRAPH],
+            )
+            raw_chunks = [
+                EmbeddingChunk(
+                    uid=uid,
+                    commit_sha=commit_sha,
+                    content_digest=digest,
+                    start_char=unit.span.start_char if unit.span else 0,
+                    end_char=unit.span.end_char if unit.span else len(unit.text),
+                    text=unit.text,
+                )
+                for unit in units
+                if unit.text.strip()
+            ]
+        except Exception:
+            raw_chunks = chunk_text(body)
+        if not raw_chunks:
+            raw_chunks = chunk_text(body)
         payload: list[tuple[EmbeddingChunk, list[float]]] = []
         for chunk in raw_chunks:
             enriched = EmbeddingChunk(
@@ -203,7 +232,16 @@ class EmbeddingRetriever:
                 end_char=chunk.end_char,
                 text=chunk.text,
             )
-            payload.append((enriched, embed_text(chunk.text)))
+            payload.append(
+                (
+                    enriched,
+                    embed_text(
+                        chunk.text,
+                        debug_hash_embeddings=self._debug_hash,
+                        model_id=self.config.embeddings.model_id,
+                    ),
+                )
+            )
         self.store.store_chunks(uid, commit_sha, digest, payload)
 
     def search(self, query: PKLQuery, *, seen_uids: set[str]) -> list[PKLResult]:

@@ -180,16 +180,51 @@ class SemanticTagger:
         Returns:
             List of tags
         """
-        # This would require pre-computed embeddings for seed words
-        # For now, return empty list (to be implemented when needed)
+        if not word_embedding:
+            return []
+        seed_map = {
+            "affect": self.affect_keywords,
+            "imagery": self.imagery_keywords,
+            "theme": self.theme_keywords,
+            "domain": self.domain_keywords,
+        }
+        seeds = seed_map.get(tag_category, {})
+        if not seeds:
+            return []
+        try:
+            import math
 
-        # In production, you would:
-        # 1. Have pre-computed embeddings for each tag's seed words
-        # 2. Compute average embedding for each tag
-        # 3. Compare word embedding to tag embeddings
-        # 4. Tag with any above threshold
+            from ..semantic.embedder import SemanticEmbedder
 
-        return []
+            embedder = getattr(self, "_embedder", None)
+            if embedder is None:
+                embedder = SemanticEmbedder()
+                self._embedder = embedder
+            if embedder.model is None:
+                return []
+
+            def cosine(a, b):
+                dot = sum(x * y for x, y in zip(a, b))
+                na = math.sqrt(sum(x * x for x in a)) or 1.0
+                nb = math.sqrt(sum(y * y for y in b)) or 1.0
+                return dot / (na * nb)
+
+            hits: List[str] = []
+            for label, words in seeds.items():
+                vectors = []
+                for word in words[:5]:
+                    vec = embedder.encode(word)
+                    if vec:
+                        vectors.append(vec)
+                if not vectors:
+                    continue
+                dim = len(vectors[0])
+                centroid = [sum(row[i] for row in vectors) / len(vectors) for i in range(dim)]
+                if cosine(word_embedding, centroid) >= threshold:
+                    hits.append(label)
+            return hits
+        except Exception:
+            return []
 
     def tag_word(self, lemma: str, lexico_data: Dict,
                 semantics_data: Dict = None) -> Dict[str, List[str]]:
@@ -211,15 +246,18 @@ class SemanticTagger:
         # Rule-based tagging
         rule_tags = self.rule_based_tag(lemma, definitions, labels, examples)
 
-        # Embedding-based tagging (if embedding available)
-        # For now, we'll just use rule-based tags
-        # In production, combine with embedding-based tags
+        embedding = None
+        if semantics_data:
+            embedding = semantics_data.get("embedding")
+        emb_affect = self.embedding_based_tag(embedding or [], "affect", threshold=0.35) if embedding else []
+        emb_imagery = self.embedding_based_tag(embedding or [], "imagery", threshold=0.35) if embedding else []
+        emb_theme = self.embedding_based_tag(embedding or [], "theme", threshold=0.35) if embedding else []
 
         return {
             'domain_tags': rule_tags['domain'],
-            'affect_tags': rule_tags['affect'],
-            'imagery_tags': rule_tags['imagery'],
-            'theme_tags': rule_tags['theme']
+            'affect_tags': sorted(set(rule_tags['affect']) | set(emb_affect)),
+            'imagery_tags': sorted(set(rule_tags['imagery']) | set(emb_imagery)),
+            'theme_tags': sorted(set(rule_tags['theme']) | set(emb_theme)),
         }
 
     def tag_from_lexico(self, limit: Optional[int] = None):

@@ -9,6 +9,8 @@ description = "SPWS poetry analysis with optional WordRare integration"
 requires-python = ">=3.12,<3.15"
 dependencies = [
   "spws-contracts-core",
+  "spws-domain",
+  "spws-semantics",
 ]
 
 [tool.setuptools.package-dir]

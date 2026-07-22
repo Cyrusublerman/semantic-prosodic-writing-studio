@@ -11,8 +11,11 @@ from spws_storage import load_config, WorkspaceStore
 def test_vertical_demo_function(spws_config, temp_workspace, monkeypatch):
     monkeypatch.setenv("SPWS_CONFIG", str(temp_workspace["config_path"]))
     from spws_cli import config as cli_config
+    from spws_cli import main as cli_main
 
-    monkeypatch.setattr(cli_config, "load_spws_config", lambda config_path=None: spws_config)
+    stub = lambda config_path=None: spws_config  # noqa: E731
+    monkeypatch.setattr(cli_config, "load_spws_config", stub)
+    monkeypatch.setattr(cli_main, "load_spws_config", stub)
     result = run_poetry_revision_demo(accept_first=True)
     assert result["candidate_count"] >= 0
     assert Path(result["promotion_path"]).exists()
@@ -23,8 +26,11 @@ def test_vertical_demo_function(spws_config, temp_workspace, monkeypatch):
 def test_cli_poetry_revision_command(spws_config, temp_workspace, monkeypatch, capsys):
     monkeypatch.setenv("SPWS_CONFIG", str(temp_workspace["config_path"]))
     from spws_cli import config as cli_config
+    from spws_cli import main as cli_main
 
-    monkeypatch.setattr(cli_config, "load_spws_config", lambda config_path=None: spws_config)
+    stub = lambda config_path=None: spws_config  # noqa: E731
+    monkeypatch.setattr(cli_config, "load_spws_config", stub)
+    monkeypatch.setattr(cli_main, "load_spws_config", stub)
     code = main(["demo", "poetry-revision"])
     assert code == 0
     payload = json.loads(capsys.readouterr().out)
@@ -34,8 +40,11 @@ def test_cli_poetry_revision_command(spws_config, temp_workspace, monkeypatch, c
 def test_cli_pkl_query(spws_config, temp_workspace, monkeypatch, capsys, project_root):
     monkeypatch.setenv("SPWS_CONFIG", str(temp_workspace["config_path"]))
     from spws_cli import config as cli_config
+    from spws_cli import main as cli_main
 
-    monkeypatch.setattr(cli_config, "load_spws_config", lambda config_path=None: spws_config)
+    stub = lambda config_path=None: spws_config  # noqa: E731
+    monkeypatch.setattr(cli_config, "load_spws_config", stub)
+    monkeypatch.setattr(cli_main, "load_spws_config", stub)
     assert main(["pkl", "index", "--source", str(project_root / "fixtures" / "pkl")]) == 0
     capsys.readouterr()
     assert main(["pkl", "query", "meter"]) == 0

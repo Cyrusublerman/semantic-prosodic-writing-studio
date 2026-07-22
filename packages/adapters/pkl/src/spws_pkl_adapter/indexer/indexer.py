@@ -300,6 +300,16 @@ class PKLIndexer:
                 parsed.body,
                 parsed.relationships,
             )
+            if (
+                self.config.embeddings.enabled
+                and not record.excluded
+                and parsed.body.strip()
+            ):
+                self._index_embeddings(
+                    staging,
+                    record,
+                    parsed.body,
+                )
             digest_index[relative_path] = record.content_digest
             record_count += 1
             if record.excluded:
@@ -344,8 +354,64 @@ class PKLIndexer:
             shutil.rmtree(target_embeddings)
         if staging_embeddings.exists():
             staging_embeddings.replace(target_embeddings)
+
+        staging_meaning = staging / "meaning"
+        target_meaning = self.index_root / "meaning"
+        if staging_meaning.exists():
+            if target_meaning.exists():
+                shutil.rmtree(target_meaning)
+            staging_meaning.replace(target_meaning)
+
         if staging.exists():
             shutil.rmtree(staging, ignore_errors=True)
+
+    def _index_embeddings(self, staging: Path, record: IndexRecord, body: str) -> None:
+        """Index semantic chunks and meaning units when embeddings are enabled."""
+        from dataclasses import replace
+
+        from ..embeddings import EmbeddingRetriever
+
+        # Point retriever store at staging embeddings dir
+        staging_config = replace(
+            self.config,
+            pkl=replace(self.config.pkl, cache_path=staging),
+        )
+        # SpwsConfig.index_root uses pkl.cache_path
+        try:
+            retriever = EmbeddingRetriever(staging_config)
+            retriever.index_record(
+                record.uid,
+                record.commit_sha,
+                record.content_digest,
+                body,
+                RightsState(record.rights),
+                PrivacyState(record.privacy),
+            )
+        except Exception:
+            # Embedding failures must not abort catalogue indexing
+            return
+        try:
+            from spws_semantics import MeaningGauge
+
+            debug_hash = bool(getattr(self.config.embeddings, "debug_hash_embeddings", False))
+            # Canonical meaning store lives at cache/meaning (not embeddings/meaning)
+            gauge = MeaningGauge(
+                staging / "meaning",
+                model_id=self.config.embeddings.model_id,
+                model_version=self.config.embeddings.model_version,
+                debug_hash_embeddings=debug_hash,
+                require_model=not debug_hash,
+            )
+            gauge.index_text(
+                body,
+                source_object_id=record.relative_path,
+                object_uid=record.uid,
+                commit_sha=record.commit_sha,
+                rights=RightsState(record.rights),
+                privacy=PrivacyState(record.privacy),
+            )
+        except Exception:
+            return
 
     def build_full(self) -> IndexManifest:
         staging = self.index_root / f".staging-{uuid.uuid4().hex}"

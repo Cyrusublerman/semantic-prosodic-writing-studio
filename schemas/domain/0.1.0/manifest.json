@@ -11,6 +11,17 @@
     "provenance-stamp": "domain/0.1.0/provenance-stamp.schema.json",
     "text-span": "domain/0.1.0/text-span.schema.json",
     "pkl-relationship": "domain/0.1.0/pkl-relationship.schema.json",
-    "conflict-info": "domain/0.1.0/conflict-info.schema.json"
+    "conflict-info": "domain/0.1.0/conflict-info.schema.json",
+    "meaning-unit": "domain/0.1.0/meaning-unit.schema.json",
+    "meaning-profile": "domain/0.1.0/meaning-profile.schema.json",
+    "similarity-query": "domain/0.1.0/similarity-query.schema.json",
+    "similarity-hit": "domain/0.1.0/similarity-hit.schema.json",
+    "similarity-result-set": "domain/0.1.0/similarity-result-set.schema.json",
+    "structural-unit": "domain/0.1.0/structural-unit.schema.json",
+    "analysis-bundle": "domain/0.1.0/analysis-bundle.schema.json",
+    "work-specification": "domain/0.1.0/work-specification.schema.json",
+    "candidate": "domain/0.1.0/candidate.schema.json",
+    "manuscript-version": "domain/0.1.0/manuscript-version.schema.json",
+    "revision-operation": "domain/0.1.0/revision-operation.schema.json"
   }
 }

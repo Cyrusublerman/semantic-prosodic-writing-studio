@@ -63,6 +63,10 @@ class Phonetics(Base):
     onset = Column(String(128))  # For alliteration
     nucleus = Column(String(128))  # For assonance
     coda = Column(String(128))  # For consonance
+    syllable_phones = Column(JSON)  # List[List[str]] ARPAbet per syllable
+    syllable_keys = Column(JSON)  # List[str] perfect syl rhyme keys
+    assonance_keys = Column(JSON)  # List[str] nucleus-only keys
+    end_keys = Column(JSON)  # {"1": key, "2": key, "3": key}
     created_at = Column(String(32), default=lambda: datetime.now().isoformat())
 
     __table_args__ = (
@@ -173,6 +177,9 @@ class WordRecord(Base):
     stress_pattern = Column(String(64))
     syllable_count = Column(Integer)
     rhyme_key = Column(String(128), index=True)
+    syllable_keys = Column(JSON)
+    end_key_2 = Column(String(256), index=True)
+    end_key_3 = Column(String(256), index=True)
 
     # Frequency/Rarity
     rarity_score = Column(Float, index=True)
@@ -197,6 +204,8 @@ class WordRecord(Base):
         Index('idx_word_record_rarity', 'rarity_score'),
         Index('idx_word_record_rhyme', 'rhyme_key'),
         Index('idx_word_record_syllables', 'syllable_count'),
+        Index('idx_word_record_end_key_2', 'end_key_2'),
+        Index('idx_word_record_end_key_3', 'end_key_3'),
     )
 
 
